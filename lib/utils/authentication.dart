@@ -9,6 +9,7 @@ FirebaseAuth _auth = FirebaseAuth.instance;
 String? uid;
 String? userEmail;
 
+
 late GoogleSignIn googleSignIn = GoogleSignIn();
 
 String? name;
@@ -29,8 +30,8 @@ Future<User?> registerWithEmailPassword(String email, String password) async {
     if (user != null) {
       uid = user.uid;
       userEmail = user.email;
+     
     }
-
   } on FirebaseAuthException catch (e) {
     if (e.code == 'weak-password') {
       print('The password provided is too weak.');
@@ -76,21 +77,16 @@ Future<User?> signInWithEmailPassword(String email, String password) async {
 Future<String> signOut() async {
   try {
     await _auth.signOut().then((value) => {
-    if(uid != null)
-      uid = null,
-    if(userEmail != null)
-      userEmail = null,
-    if(name != null)
-      name = null,
-    if(imageUrl != null)
-      imageUrl = null
-  });
+          if (uid != null) uid = null,
+          if (userEmail != null) userEmail = null,
+          if (name != null) name = null,
+          if (imageUrl != null) imageUrl = null
+        });
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('auth', false);
-  return 'User signed out';
-  }
-  catch (e) {
+    return 'User signed out';
+  } catch (e) {
     print("Sign out error: $e");
     return 'Error signing out. Try again.';
   }
@@ -106,7 +102,7 @@ Future<User?> signInWithGoogle() async {
 
   try {
     final UserCredential userCredential =
-    await _auth.signInWithPopup(authProvider);
+        await _auth.signInWithPopup(authProvider);
 
     user = userCredential.user;
   } catch (e) {
@@ -121,26 +117,28 @@ Future<User?> signInWithGoogle() async {
 
     FirebaseFirestore.instance
         .collection('Users')
-        .doc(uid).get()
-        .then((DocumentSnapshot documentSnapshot) =>
-    {
-      if(!documentSnapshot.exists){
-        print("user added"),
-        FirebaseFirestore.instance.collection('Users').doc(uid).collection("info").doc(uid).set(
-            {
-              'fname': name!.split(" ")[0],
-              'lname':name!.split(" ")[1],
-              'email':userEmail,
-              'bday':"*missing",
-              'location': "*missing",
-            }
-        )
-      }
-      else{
-        print("user exists in database")
-      }
-    });
-
+        .doc(uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) => {
+              if (!documentSnapshot.exists)
+                {
+                  print("user added"),
+                  FirebaseFirestore.instance
+                      .collection('Users')
+                      .doc(uid)
+                      .collection("info")
+                      .doc(uid)
+                      .set({
+                    'fname': name!.split(" ")[0],
+                    'lname': name!.split(" ")[1],
+                    'email': userEmail,
+                    'bday': "*missing",
+                    'location': "*missing",
+                  })
+                }
+              else
+                {print("user exists in database")}
+            });
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('auth', true);
@@ -182,6 +180,6 @@ Future getUser() async {
   }
 }
 
-void resetPassword(String email){
+void resetPassword(String email) {
   _auth.sendPasswordResetEmail(email: email);
 }

@@ -1,7 +1,9 @@
 import 'package:aishop/screens/homepage/homepage.dart';
 import 'package:aishop/screens/login/loginscreen.dart';
 import 'package:aishop/utils/authentication.dart';
+import 'package:aishop/widgets/recommendations/recommendations.dart';
 import 'package:flutter/material.dart';
+import 'dart:async' show Future;
 import 'package:flutter/services.dart' show rootBundle;
 
 void main() {
@@ -25,17 +27,22 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
+  /* Future<String> loadAsset() async {
+  }
+*/
 //check if user is already logged in in the previous session.
   //get user info if logged in.
   Future getUserInfo() async {
-    recommendationsList = await rootBundle
-        .loadString('../assets/DecisionTreeOutputs/recommendations.csv');
+    recommendationsList = await rootBundle.loadString(
+        '../../assets/DecisionTreeOutputs/final_recommendations.csv');
+
     await getUser();
     setState(() {
       if (uid != null) {
         auto = true;
       }
     });
+    // print(myData);
     print(uid);
   }
 

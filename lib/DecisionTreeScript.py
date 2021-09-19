@@ -38,144 +38,144 @@ db = firestore.client()
 
 
 # %%
+#loading Dataset
+
+col_names = ['Prod_ID', 'Prod_Cat', 'User_ID', 'User_Province', 'Event', 'Clicks', 'Wishlist', 'Recommend']
+
+
+pima = pd.read_csv("../assets/DecisionTreeData/Train_Data.csv", header=None, names=col_names)
+
+pima
+
+feature_cols = ['Prod_Cat', 'User_Province', 'Clicks', 'Wishlist']
+
+X = pima[feature_cols]
+y = pima.Recommend
+
+# Split dataset into training set and test set
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1) # 80% training and 20% test
+
+clf = DecisionTreeClassifier()
+clf = clf.fit(X_train,y_train)
+
+trained_IDs = pima.Prod_ID
+
 #def recommendTofile():
 
-provinceJson =  '{ "Limpopo" : 1,"Gauteng" : 2,"Free State" : 3,"Western Cape" : 4,"KZN" : 5,"North West" : 6,"Northern Cape" : 7,"Eastern Cape" : 8,"Mpumalanga" : 9}'
-categoryJson =  '{"Books" : 1, "Shoes" : 2, "Clothing" : 3, "Tech" : 4, "Kitchen" : 5}'
+provinceJson =  '{ "Limpopo" : 1,"Gauteng" : 2,"Free State" : 3,"Western Cape" : 4,"Kwazulu-Natal" : 5,"North West" : 6,"Northern Cape" : 7,"Eastern Cape" : 8,"Mpumalanga" : 9}'
+
 
 # parse x:
-loadProvinceJ = json.loads(provinceJson)
-loadCategoryJ = json.loads(categoryJson)
 
 print('collection')
 products_ref = db.collection('Products')
 Products_docs = products_ref.get()
 
 print('collected')
-#for prod_doc in Products_docs:
-
-        #print(f'{prod_doc.id} => {prod_doc.to_dict()}')
-        #print(prod_doc.exists('clicks'))
-       # city_ref = db.collection(u'Products').document(prod_doc.id)
-
-       # city_ref.set({u'id': prod_doc.id}, merge=True)
-      #  noOfClicks = 1
-        #if prod_doc.get('clicks'):
-        #    noOfClicks = prod_doc.get('clicks')
-            
-        
-        #category = prod_doc.get('category')
-       # print(prod_doc.id)
-        #print(loadCategoryJ[category])
-        #print(prod_doc.get('clicks'))
-        #print(prod_doc.get('category'))
-
 
 users_ref = db.collection('Users')
 users_docs = users_ref.list_documents()
-# the result is a Python dictionary:
-#print(loadCategoryJ["age"])
 
+
+
+
+# %%
+list = []
 for doc in users_docs:
-    print(doc.id)
+    #print(doc.id)
+    provinceJson =  '{ "Limpopo" : 1,"Gauteng" : 2,"Free State" : 3,"Western Cape" : 4,"KZN" : 5,"KwaZulu-Natal": 5,"North West" : 6,"Northern Cape" : 7,"Eastern Cape" : 8,"Mpumalanga" : 9}'
+    loadProvinceJ = json.loads(provinceJson)
+   
+    categoryJson =  '{"Books" : 1, "Shoes" : 2, "Clothing" : 3, "Tech" : 4, "Kitchen" : 5}'
+    loadCategoryJ = json.loads(categoryJson)
     province = ''
+    
     userDoc1 = users_ref.document(doc.id)
     userColl1 = userDoc1.collection('info')
     userColl2 = userDoc1.collection('Wishlist')
     colDocs1 = userColl1.get()
     s = False
     colDocs2 = userColl2.list_documents()
+    info = userColl1.get()
+        #
+    #    Province
+    #
+    for colD_doc in colDocs1:
+        province = colD_doc.get('province')
+        province = loadProvinceJ[province]
+
+    #print("Province:" + province)
     #
     # ##
     # Wishlist
     ####
-    #
-    for colD_doc in colDocs2:
-        print(colD_doc.id)
-        pid = '0OeiOnaPTn1AiJWTUQ9i'
-        s = pid in colDocs2
+    if province == '':
+        continue
+    else:        
+        for prod_doc in Products_docs:
+            pid = prod_doc.id
 
-        print("ProductID in Wishlist")
-    #
-    #    Province
-    #
+            if pid in trained_IDs:
+                continue
+            else:
+                s = pid in colDocs2
+                if s :
+                    wishlist = 1
+                else:
+                     wishlist = 0    
+          #  print("product_ID: " + pid)
+           # print("In Wishlist ? : " + str(wishlist))
 
-    for colD_doc in colDocs1:
-        print(colD_doc.get('province'))
-        province = colD_doc.get('province')
-
-    products_ref = db.collection('Products')
-    Products_docs = products_ref.get()
-
-    for prod_doc in Products_docs:
-
-        #print(f'{prod_doc.id} => {prod_doc.to_dict()}')
-        #print(str(prod_doc.exists('clicks')))
-        noOfClicks = 1
+            noOfClicks = 1
         #
         #   Clicks
         #
-        if prod_doc.get('clicks')>= 1:
-            noOfClicks = prod_doc.get('clicks')
+            if prod_doc.get('clicks')>= 1:
+                noOfClicks = prod_doc.get('clicks')
             
         #
         #
         #  Product
         #
-        category = prod_doc.get('category')
-        print(loadCategoryJ[category])
-        #print(prod_doc.get('clicks'))
-        #print(prod_doc.get('category'))
-        break
+            category = prod_doc.get('category')
+       # print("Category: " + str(loadCategoryJ[category]))
+       # print("Clicks: " + str(noOfClicks))
+            category = loadCategoryJ[category]
+        
+            listTemp = [pid, category, doc.id, province, 'view', noOfClicks, wishlist]
+            
+           
 
-col_names = ['Prod_ID', 'Prod_Cat', 'User_ID', 'User_Province', 'Event', 'Clicks', 'Wishlist', 'Recommend']
+            #print(listTemp)
+
+            test_data = pd.DataFrame([listTemp], columns=['Prod_ID', 'Prod_Cat', 'User_ID', 'User_Province', 'Event', 'Clicks', 'Wishlist'])
+
+        #test = pd.read_csv("../assets/DecisionTreeData/Train_Data.csv", header=None, names=col_names)
+ 
+            y_predict = clf.predict(test_data[feature_cols])
+
+            if(y_predict == 1):
+                str = doc.id + "|" + pid
+                #print(str)
+                list.append(str)
+                print(str)
+        
+
+
+# %%
+np.savetxt("../assets/DecisionTreeOutputs/final_recommendations.csv", list, delimiter=",", fmt='%s')
 
 # %% [markdown]
 # 
 
 # %%
-pima = pd.read_csv("../assets/DecisionTreeData/Train_Data.csv", header=None, names=col_names)
-pima
-
-
-# %%
-#pimas.head()
-
-
-# %%
-feature_cols = ['Prod_Cat', 'User_Province', 'Clicks', 'Wishlist']
-
-
-# %%
-X = pima[feature_cols]
-
-
-# %%
-y = pima.Recommend
-
-
-# %%
-# Split dataset into training set and test set
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1) # 70% training and 30% test
-
-
-# %%
 #Before Pruning
-clf = DecisionTreeClassifier()
 
-#pimas = pd.read_csv("..assets/DecisionTreeData/test_Data.csv", header=None, names=col_names)
+y_predict = clf.predict(X_test)
 
-#X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=1, random_state=1) # 100% Test Data(Totally Different from Training Data/Duplicates filtered out)
 
-clf = clf.fit(X_train,y_train)
-
-y_pred = clf.predict(X_test)
-
-y_pred.tofile("../assets/DecisionTreeOutputs/recommendations.csv", sep = ',')
-
-AccuracyBeforePruning = metrics.accuracy_score(y_test, y_pred)
+AccuracyBeforePruning = metrics.accuracy_score(y_test, y_predict)
 print("-----------------------------------------------ACCURACY BEFORE PRUNING---------------------------------\n")
-
 print(AccuracyBeforePruning)
 
 print("\n-------------------------------------------------------------------------------------------------------\n")
@@ -202,8 +202,6 @@ clf = clf.fit(X_train,y_train)
 
 y_pred = clf.predict(X_test)
 
-y_pred.tofile("../assets/DecisionTreeOutputs/recommendations(Pruned).csv", sep = ',')
-
 AccuracyAfterPruning = metrics.accuracy_score(y_test, y_pred)
 
 print("-----------------------------------------------ACCURACY AFTER PRUNING-------------------------------\n")
@@ -222,9 +220,5 @@ export_graphviz(clf, out_file=dot_data,
 graph = pydotplus.graph_from_dot_data(dot_data.getvalue())  
 graph.write_png('../assets/DecisionTreeOutputs/recommendations(Pruned).png')
 Image(graph.create_png())
-
-
-# %%
-
 
 

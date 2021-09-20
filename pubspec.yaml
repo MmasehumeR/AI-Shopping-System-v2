@@ -91,7 +91,10 @@ flutter:
     - assets/images/GoogleLogo.png
     - assets/images/default.jpg
     - assets/images/cover.png
-
+    - assets/DecisionTreeOutputs/final_recommendations.csv
+    - assets/DecisionTreeOutputs/recommendations.png
+    - assets/DecisionTreeOutputs/recommendations(Pruned).png
+    - assets/DecisionTreeData/Train_Data.csv
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

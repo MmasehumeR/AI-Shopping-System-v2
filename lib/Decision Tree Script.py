@@ -11,6 +11,8 @@ from sklearn.tree import export_graphviz
 from six import StringIO 
 from IPython.display import Image
 import pydotplus
+from termcolor import colored
+import colorama
 
 
 # %%
@@ -45,7 +47,7 @@ col_names = ['Prod_ID', 'Prod_Cat', 'User_ID', 'User_Province', 'Event', 'Clicks
 
 pima = pd.read_csv("../assets/DecisionTreeData/Train_Data.csv", header=None, names=col_names)
 
-pima
+print(pima)
 
 feature_cols = ['Prod_Cat', 'User_Province', 'Clicks', 'Wishlist']
 
@@ -53,7 +55,7 @@ X = pima[feature_cols]
 y = pima.Recommend
 
 # Split dataset into training set and test set
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1) # 80% training and 20% test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_state=1) # 60% training and 40% test
 
 clf = DecisionTreeClassifier()
 clf = clf.fit(X_train,y_train)
@@ -67,6 +69,15 @@ provinceJson =  '{ "Limpopo" : 1,"Gauteng" : 2,"Free State" : 3,"Western Cape" :
 
 # parse x:
 
+
+
+
+
+# %%
+pima
+
+
+# %%
 print('collection')
 products_ref = db.collection('Products')
 Products_docs = products_ref.get()
@@ -77,6 +88,8 @@ users_ref = db.collection('Users')
 users_docs = users_ref.list_documents()
 
 
+# %%
+pima
 
 
 # %%
@@ -156,8 +169,9 @@ for doc in users_docs:
 
             if(y_predict == 1):
                 str = doc.id + "|" + pid
-                #print(str)
                 list.append(str)
+                str = colored(doc.id, 'yellow') + "|" + colored(pid, 'green')
+                #print(str)
                 print(str)
         
 
@@ -176,13 +190,13 @@ y_predict = clf.predict(X_test)
 
 AccuracyBeforePruning = metrics.accuracy_score(y_test, y_predict)
 print("-----------------------------------------------ACCURACY BEFORE PRUNING---------------------------------\n")
-print(AccuracyBeforePruning)
+print(colored(AccuracyBeforePruning, 'green'))
 
 print("\n-------------------------------------------------------------------------------------------------------\n")
 
 r = export_text(clf, feature_names=feature_cols)
 
-print(r)
+print(colored(r, 'red'))
 
 dot_data = StringIO()
 
@@ -205,12 +219,12 @@ y_pred = clf.predict(X_test)
 AccuracyAfterPruning = metrics.accuracy_score(y_test, y_pred)
 
 print("-----------------------------------------------ACCURACY AFTER PRUNING-------------------------------\n")
-print(AccuracyAfterPruning)
+print(colored(AccuracyAfterPruning, 'green'))
 print("\n-------------------------------------------------------------------------------------------------------\n")
 
 r = export_text(clf, feature_names=feature_cols)
 
-print(r)
+print(colored(r, 'green'))
 
 dot_data = StringIO()
 

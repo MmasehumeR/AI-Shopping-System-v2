@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 class Recommendations extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    
     return _Recommendations();
   }
 }
@@ -54,13 +53,12 @@ class _Recommendations extends State<Recommendations> {
                         builder: (context, snapshot3) {
                           if (snapshot3.hasData) {
                             //taking the 20 most purchased products
-                            if(snapshot3.data!.docs.length >= 20){
+                            if (snapshot3.data!.docs.length >= 20) {
                               Most_Purchased.clear();
-                              for(var i = 0; i < 20; i++){
+                              for (var i = 0; i < 20; i++) {
                                 Most_Purchased.add(snapshot3.data!.docs[i]);
                               }
-                            }
-                            else{
+                            } else {
                               Most_Purchased = snapshot3.data!.docs;
                             }
                           }
@@ -75,15 +73,22 @@ class _Recommendations extends State<Recommendations> {
                                   Purchases = snapshot2.data!.docs;
                                 }
                                 //New users
-                                if (Wishlist.isEmpty && recommendations.isEmpty && Purchases.isEmpty) {
+                                if (Wishlist.isEmpty &&
+                                    recommendations.isEmpty &&
+                                    Purchases.isEmpty) {
                                   recommendations = randoms(Most_Purchased);
                                 }
                                 //recommending based of history
-                                if (recommendations.isNotEmpty && Purchases.isNotEmpty) {
-                                  for (var i = 0; i < recommendations.length; i++) {
+                                if (recommendations.isNotEmpty &&
+                                    Purchases.isNotEmpty) {
+                                  for (var i = 0;
+                                      i < recommendations.length;
+                                      i++) {
                                     for (var j = 0; j < Purchases.length; j++) {
-                                      if (recommendations[i].id == Purchases[j].id) {
-                                        recommendations.remove(recommendations[i]);
+                                      if (recommendations[i].id ==
+                                          Purchases[j].id) {
+                                        recommendations
+                                            .remove(recommendations[i]);
                                         if (i == recommendations.length)
                                           i = i - 1;
                                       }
@@ -91,55 +96,74 @@ class _Recommendations extends State<Recommendations> {
                                   }
                                 }
                                 //recommending based on items in a wishlist
-                                if (recommendations.isNotEmpty && Wishlist.isNotEmpty) {
-                                  for (var i = 0; i < recommendations.length; i++) {
+                                if (recommendations.isNotEmpty &&
+                                    Wishlist.isNotEmpty) {
+                                  for (var i = 0;
+                                      i < recommendations.length;
+                                      i++) {
                                     for (var j = 0; j < Wishlist.length; j++) {
-                                      if (recommendations[i].id == Wishlist[j].id) {
+                                      if (recommendations[i].id ==
+                                          Wishlist[j].id) {
                                         Wishlist.remove(Wishlist[j]);
                                         if (j == Wishlist.length) j = j - 1;
                                       }
                                     }
                                   }
-                                  for (var count = 0; count < Wishlist.length; count++) {
+                                  for (var count = 0;
+                                      count < Wishlist.length;
+                                      count++) {
                                     recommendations.add(Wishlist[count]);
                                   }
                                 }
                                 //recommending based on most purchased
-                                if (recommendations.isNotEmpty && Most_Purchased.isNotEmpty) {
-                                  for (var i = 0; i < recommendations.length; i++) {
-                                    for (var j = 0; j < Most_Purchased.length; j++) {
-                                      if (recommendations[i].id == Most_Purchased[j].id) {
+                                if (recommendations.isNotEmpty &&
+                                    Most_Purchased.isNotEmpty) {
+                                  for (var i = 0;
+                                      i < recommendations.length;
+                                      i++) {
+                                    for (var j = 0;
+                                        j < Most_Purchased.length;
+                                        j++) {
+                                      if (recommendations[i].id ==
+                                          Most_Purchased[j].id) {
                                         //recommendations.removeAt(i);
-                                        Most_Purchased.remove(Most_Purchased[j]);
+                                        Most_Purchased.remove(
+                                            Most_Purchased[j]);
                                         if (j == Most_Purchased.length)
                                           j = j - 1;
                                       }
                                     }
                                   }
-                                  for (var count = 0; count < Most_Purchased.length; count++) {
+                                  for (var count = 0;
+                                      count < Most_Purchased.length;
+                                      count++) {
                                     recommendations.add(Most_Purchased[count]);
                                   }
                                 }
 
                                 if (recommendations.length != 0) {
                                   //recommendations..shuffle();
-                                  for (var i = 0; i < recommendations.length; i++) {
+                                  for (var i = 0;
+                                      i < recommendations.length;
+                                      i++) {
                                     return GridView.builder(
                                       scrollDirection: Axis.horizontal,
                                       gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 1,
-                                          childAspectRatio: 3 / 2,
-                                          mainAxisSpacing: 0),
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 1,
+                                              childAspectRatio: 3 / 2,
+                                              mainAxisSpacing: 0),
                                       itemBuilder: (context, index) {
                                         while (index < recommendations.length) {
                                           return ProductCard(
                                             recommendations[index].id,
                                             recommendations[index].get('url'),
                                             recommendations[index].get('name'),
-                                            recommendations[index].get('description'),
+                                            recommendations[index]
+                                                .get('description'),
                                             recommendations[index].get('price'),
-                                            recommendations[index].get('stockamt'),
+                                            recommendations[index]
+                                                .get('stockamt'),
                                           );
                                         }
                                         throw '';
@@ -147,23 +171,26 @@ class _Recommendations extends State<Recommendations> {
                                       itemCount: recommendations.length,
                                     );
                                   }
-
                                 } else {
                                   return Text("No Recommendations yet");
                                 }
-                                throw'';
+                                throw '';
                               });
                         });
                   });
             }));
   }
-  List<DocumentSnapshot> randoms(List<DocumentSnapshot> MostPurchased){
+
+  List<DocumentSnapshot> randoms(List<DocumentSnapshot> MostPurchased) {
     List<DocumentSnapshot> randomized = [];
-    for(var i = 0; i < MostPurchased.length; i++){
+    for (var i = 0; i < MostPurchased.length; i++) {
       var cat = MostPurchased[i].get("category");
-      Stream<QuerySnapshot> stream = FirebaseFirestore.instance.collection("Products").where("category", isEqualTo: cat).snapshots();
+      Stream<QuerySnapshot> stream = FirebaseFirestore.instance
+          .collection("Products")
+          .where("category", isEqualTo: cat)
+          .snapshots();
       stream.forEach((element) {
-        if(element != null){
+        if (element != null) {
           element.docs..shuffle();
           element.docs..reversed;
           element.docs..shuffle();
@@ -172,12 +199,11 @@ class _Recommendations extends State<Recommendations> {
           element.docs..shuffle();
           final _random = new Random();
           final doc = element.docs[_random.nextInt(element.docs.length)];
-          if(randomized.length <= 20){
-            if(randomized.length == 0){
+          if (randomized.length <= 20) {
+            if (randomized.length == 0) {
               randomized.add(doc);
-            }
-            else{
-              if(!_contains(randomized, doc)){
+            } else {
+              if (!_contains(randomized, doc)) {
                 randomized.add(doc);
               }
             }
@@ -187,16 +213,18 @@ class _Recommendations extends State<Recommendations> {
     }
     return randomized;
   }
-  bool _contains(List<DocumentSnapshot> list, QueryDocumentSnapshot<Object?> documentSnapshot){
+
+  bool _contains(List<DocumentSnapshot> list,
+      QueryDocumentSnapshot<Object?> documentSnapshot) {
     var counter = 0;
     var state = false;
-    for(var i = 0; i < list.length; i++){
-      if(list[i].data() == documentSnapshot.data()){
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].data() == documentSnapshot.data()) {
         counter++;
       }
     }
-    if(counter > 0){
-      state =  true;
+    if (counter > 0) {
+      state = true;
     }
     return state;
   }

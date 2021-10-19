@@ -13,10 +13,11 @@ class SearchProvider with ChangeNotifier {
   var capitalizedValue = ' ';
   int searchvalue = 0;
 
-  bool get isSearching => _isSearching;
+  // bool get isSearching => _isSearching;
 
   void search() {
     // _isSearching = true;
+    notifyListeners();
     locator<NavigationService>().globalNavigateTo(SearchRoute, contxt);
   }
 
@@ -30,9 +31,11 @@ class SearchProvider with ChangeNotifier {
         documentSnapshot.reference.update({"clicks": FieldValue.increment(1)});
       });
     });
+    notifyListeners();
   }
 
   searchByName(String searchField) {
+    notifyListeners();
     return FirebaseFirestore.instance
         .collection('Products')
         .where('name', isGreaterThan: searchField)
@@ -46,6 +49,7 @@ class SearchProvider with ChangeNotifier {
 
   initSearch(value) async {
     _isSearching = true;
+    searchvalue = capitalizedValue.length;
     notifyListeners();
     if (value.length == 0) {
       queryResultSet = [];

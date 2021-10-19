@@ -5,15 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// class Search extends StatefulWidget {
-//   @override
-//   SearchState createState() => SearchState();
-// }
-
 class Search extends StatelessWidget {
-  // var capitalizedValue = ' ';
-
-  // int searchvalue = 0;
+ 
   @override
   Widget build(BuildContext context) {
     final SearchProvider searchProvider = Provider.of<SearchProvider>(context);

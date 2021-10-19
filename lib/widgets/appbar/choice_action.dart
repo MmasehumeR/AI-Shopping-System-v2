@@ -7,9 +7,11 @@ import 'package:aishop/utils/authentication.dart';
 import 'package:aishop/widgets/appbar/appbar.dart';
 import 'package:flutter/material.dart';
 
+
+
 void choiceAction(String choice) {
       if (choice == Constants.profile) {
-        locator<NavigationService>().globalNavigateTo(ProfileRoute, contxt);;
+        locator<NavigationService>().globalNavigateTo(ProfileRoute, contxt);
       } else if (choice == Constants.settings) {
         locator<NavigationService>().globalNavigateTo(SettingsRoute, contxt);
       } else if (choice == Constants.orders) {

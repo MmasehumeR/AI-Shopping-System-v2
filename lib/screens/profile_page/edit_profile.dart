@@ -1,6 +1,4 @@
-import 'package:aishop/screens/cart/checkout_page.dart';
-import 'package:aishop/screens/settings/settings.dart';
-import 'package:aishop/styles/icon_button.dart';
+import 'package:aishop/providers/profile_provider.dart';
 import 'package:aishop/styles/round_button.dart';
 import 'package:aishop/styles/round_textfield.dart';
 import 'package:aishop/styles/theme.dart';
@@ -10,102 +8,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:provider/provider.dart';
 
-class EditProfilePage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return _EditProfilePage();
-  }
-}
-
-class _EditProfilePage extends State<EditProfilePage> {
-  Future getUserInfofromdb() async {
-    FirebaseFirestore _firestore = FirebaseFirestore.instance;
-    CollectionReference _collectionReference = _firestore.collection("Users");
-    DocumentReference _doc = _collectionReference.doc(uid);
-    DocumentReference _documentReference = _doc.collection("info").doc(uid);
-
-    _documentReference.get().then((documentSnapshot) => {
-          if (!documentSnapshot.exists)
-            {
-              print("Sorry, User profile not found."),
-            }
-          else
-            {
-              setState(() {
-                userFirstNameController.text = documentSnapshot.get("fname");
-                userLastNameController.text = documentSnapshot.get("lname");
-                userEmailController.text = documentSnapshot.get("email");
-                userBirthdayController.text = documentSnapshot.get("bday");
-                userLocationController.text = documentSnapshot.get("location");
-              })
-            }
-        });
-  }
-
-  late TextEditingController userEmailController = TextEditingController();
-  late TextEditingController userFirstNameController = TextEditingController();
-  late TextEditingController userLastNameController = TextEditingController();
-  late TextEditingController userBirthdayController = TextEditingController();
-  late TextEditingController userLocationController = TextEditingController();
-  bool _displayFNameValid = true;
-  bool _displayLNameValid = true;
-
-  late FocusNode textFocusNodeBirthday = FocusNode();
-
-  late FocusNode textFocusNodeLocation = FocusNode();
-
-  void initState() {
-    getUserInfofromdb();
-    super.initState();
-  }
-
-  updateProfileData() {
-    setState(() {
-      userFirstNameController.text.isEmpty
-          ? _displayFNameValid = false
-          : _displayFNameValid = true;
-      userLastNameController.text.isEmpty
-          ? _displayLNameValid = false
-          : _displayLNameValid = true;
-
-      if (_displayFNameValid && _displayLNameValid) {
-        FirebaseFirestore.instance
-            .collection('Users')
-            .doc(uid)
-            .collection('info')
-            .doc(uid)
-            .update({
-          'fname': userFirstNameController.text,
-          'lname': userLastNameController.text,
-          'bday': userBirthdayController.text,
-        });
-
-        if (userLocationController.text.isEmpty) {
-          FirebaseFirestore.instance
-              .collection('Users')
-              .doc(uid)
-              .collection('info')
-              .doc(uid)
-              .update({'location': "*missing"});
-        } else {
-          FirebaseFirestore.instance
-              .collection('Users')
-              .doc(uid)
-              .collection('info')
-              .doc(uid)
-              .update({'location': userLocationController.text});
-        }
-      }
-    });
-    SnackBar snackbar = SnackBar(content: Text("Profile updated!"));
-    ScaffoldMessenger.of(context).showSnackBar(snackbar);
-  }
-
+class EditProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    contxt = context;
     Size size = MediaQuery.of(context).size;
-
+    final ProfileProvider profileProvider =
+        Provider.of<ProfileProvider>(context);
     return new Scaffold(
         appBar: MyAppBar(
           title: Text(
@@ -119,7 +30,7 @@ class _EditProfilePage extends State<EditProfilePage> {
           height: size.height,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[ 
+            children: <Widget>[
               Row(
                 children: <Widget>[
                   Container(
@@ -168,9 +79,9 @@ class _EditProfilePage extends State<EditProfilePage> {
                                   const EdgeInsets.symmetric(vertical: 2.0),
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  primary: Colors.white
-                                ),
-                                onPressed: () => updateProfileData(),
+                                    primary: Colors.white),
+                                onPressed: () =>
+                                    profileProvider.updateProfileData(),
                                 child: Text(
                                   "Edit Profile Picture",
                                   style: TextStyle(
@@ -193,7 +104,8 @@ class _EditProfilePage extends State<EditProfilePage> {
                                 autofocus: false,
                                 text: "First Name",
                                 preicon: Icon(Icons.person),
-                                control: userFirstNameController),
+                                control:
+                                    profileProvider.userFirstNameController),
                           ),
 
                           Padding(
@@ -202,20 +114,22 @@ class _EditProfilePage extends State<EditProfilePage> {
                                 autofocus: false,
                                 preicon: Icon(Icons.person),
                                 text: "Last Name",
-                                control: userLastNameController),
+                                control:
+                                    profileProvider.userLastNameController),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 15.0),
                             child: RoundTextField(
                                 autofocus: false,
                                 onSubmitted: (value) {
-                                  textFocusNodeBirthday.unfocus();
-                                  FocusScope.of(context)
-                                      .requestFocus(textFocusNodeLocation);
+                                  profileProvider.textFocusNodeBirthday
+                                      .unfocus();
+                                  FocusScope.of(context).requestFocus(
+                                      profileProvider.textFocusNodeLocation);
                                 },
                                 preicon: Icon(LineIcons.birthdayCake),
                                 margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                control: userBirthdayController,
+                                control: profileProvider.userBirthdayController,
                                 text: "Birthday",
                                 tap: () => {
                                       FocusScope.of(context).unfocus(),
@@ -228,7 +142,7 @@ class _EditProfilePage extends State<EditProfilePage> {
                                           builder:
                                               (BuildContext context, picker) {
                                             return Theme(
-                                                //TODO: change colors
+                                                // TODO: change colors
                                                 data: ThemeData.dark().copyWith(
                                                   colorScheme: ColorScheme.dark(
                                                     primary:
@@ -247,8 +161,8 @@ class _EditProfilePage extends State<EditProfilePage> {
                                           String formattedDate =
                                               DateFormat('yyyy-MM-dd')
                                                   .format(pickedDate);
-                                          userBirthdayController.text =
-                                              formattedDate;
+                                          profileProvider.userBirthdayController
+                                              .text = formattedDate;
                                         }
                                       })
                                     }),
@@ -259,13 +173,13 @@ class _EditProfilePage extends State<EditProfilePage> {
                               autofocus: false,
                               preicon: Icon(Icons.location_pin),
                               text: "Location",
-                              control: userLocationController,
+                              control: profileProvider.userLocationController,
                             ),
                           ),
                           // ignore: deprecated_member_use
                           RoundButton(
                             text: 'UPDATE PROFILE',
-                            press: () => updateProfileData(),
+                            press: () => profileProvider.updateProfileData(),
                           ),
                         ],
                       ),

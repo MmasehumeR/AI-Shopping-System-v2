@@ -5,18 +5,14 @@ import 'package:aishop/widgets/modal_popup/modal_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class PastPurchase extends StatefulWidget {
-  @override
-  PastPurchaseState createState() => PastPurchaseState();
-}
 
-class PastPurchaseState extends State<PastPurchase> {
+class PastPurchase extends StatelessWidget{
   Widget build(BuildContext context) {
     return Scaffold(
         floatingActionButton: null,
         appBar: MyAppBar(
           title: Text(
-            "Past Transactions",
+            "Orders",
           ),
           context: context,
         ),

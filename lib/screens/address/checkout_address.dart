@@ -1,3 +1,4 @@
+import 'package:aishop/providers/checkout_address_provider.dart';
 import 'package:aishop/screens/cart/components/order_review.dart';
 import 'package:aishop/screens/address/newaddress.dart';
 import 'package:aishop/screens/delivery/checkoutdelivery.dart';
@@ -9,49 +10,52 @@ import 'package:aishop/styles/theme.dart';
 import 'package:aishop/utils/authentication.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-class CheckOutAddress extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return _CheckOutAddress();
-  }
-}
+// class CheckOutAddress extends StatefulWidget {
+//   @override
+//   State<StatefulWidget> createState() {
+//     return _CheckOutAddress();
+//   }
+// }
 
-class _CheckOutAddress extends State<CheckOutAddress> {
+class CheckOutAddress extends StatelessWidget {
+  // Future getUserInfofromdb() async {
+  //   FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  //   CollectionReference _collectionReference = _firestore.collection("Users");
+  //   DocumentReference _doc = _collectionReference.doc(uid);
+  //   DocumentReference _documentReference = _doc.collection("info").doc(uid);
 
-  Future getUserInfofromdb() async {
-    FirebaseFirestore _firestore = FirebaseFirestore.instance;
-    CollectionReference _collectionReference = _firestore.collection("Users");
-    DocumentReference _doc = _collectionReference.doc(uid);
-    DocumentReference _documentReference = _doc.collection("info").doc(uid);
+  //   _documentReference.get().then((documentSnapshot) => {
+  //         if (!documentSnapshot.exists)
+  //           {
+  //             print("Sorry, User profile not found."),
+  //           }
+  //         else
+  //           {
+  //             setState(() {
+  //               userLocationController.text = documentSnapshot.get("location");
+  //             })
+  //           }
+  //       });
+  // }
 
-    _documentReference.get().then((documentSnapshot) => {
-          if (!documentSnapshot.exists)
-            {
-              print("Sorry, User profile not found."),
-            }
-          else
-            {
-              setState(() {
-                userLocationController.text = documentSnapshot.get("location");
-              })
-            }
-        });
-  }
+  // late TextEditingController userLocationController = TextEditingController();
 
-  late TextEditingController userLocationController = TextEditingController();
+  // void initState() {
+  //   getUserInfofromdb();
+  //   super.initState();
+  // }
 
-  void initState() {
-    getUserInfofromdb();
-    super.initState();
-  }
-
-  late String UsedAddress;
-  late String HomeAddress;
-  late String WorkAddress;
+  // late String UsedAddress;
+  // late String HomeAddress;
+  // late String WorkAddress;
   @override
   Widget build(BuildContext context) {
+    final CheckoutAdressProvider checkoutAdressProvider =
+        Provider.of<CheckoutAdressProvider>(context);
+
     return Scaffold(
       body: Row(
         children: <Widget>[
@@ -105,13 +109,16 @@ class _CheckOutAddress extends State<CheckOutAddress> {
                                                     RoundTextField(
                                                       autofocus: false,
                                                       onChanged: (Haddress) {
-                                                        HomeAddress = Haddress;
+                                                        checkoutAdressProvider
+                                                                .HomeAddress =
+                                                            Haddress;
                                                       },
                                                       preicon: Icon(
                                                           Icons.location_pin),
                                                       text: "Location",
                                                       control:
-                                                          userLocationController,
+                                                          checkoutAdressProvider
+                                                              .userLocationController,
                                                     ),
                                                   ],
                                                 ),
@@ -119,7 +126,10 @@ class _CheckOutAddress extends State<CheckOutAddress> {
                                                   DialogButton(
                                                     onPressed: () {
                                                       if (!(cartTotal == 0)) {
-                                                        NewAddress().homeaddress(HomeAddress,uid);
+                                                        NewAddress().homeaddress(
+                                                            checkoutAdressProvider
+                                                                .HomeAddress,
+                                                            uid);
                                                         Navigator.of(context).push(
                                                             MaterialPageRoute(
                                                                 builder: (BuildContext
@@ -283,22 +293,27 @@ class _CheckOutAddress extends State<CheckOutAddress> {
                                                     RoundTextField(
                                                       autofocus: false,
                                                       onChanged: (Waddress) {
-                                                        WorkAddress = Waddress;
+                                                        checkoutAdressProvider
+                                                                .WorkAddress =
+                                                            Waddress;
                                                       },
                                                       preicon: Icon(
                                                           Icons.location_pin),
                                                       text: "Location",
                                                       control:
-                                                          userLocationController,
+                                                          checkoutAdressProvider
+                                                              .userLocationController,
                                                     ),
                                                   ],
                                                 ),
                                                 buttons: [
                                                   DialogButton(
                                                     onPressed: () {
-
                                                       if (!(cartTotal == 0)) {
-                                                        NewAddress().workaddress(WorkAddress, uid);
+                                                        NewAddress().workaddress(
+                                                            checkoutAdressProvider
+                                                                .WorkAddress,
+                                                            uid);
                                                         Navigator.of(context).push(
                                                             MaterialPageRoute(
                                                                 builder: (BuildContext

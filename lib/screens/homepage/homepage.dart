@@ -2,6 +2,7 @@ import 'package:aishop/addons/popop_menu_consts.dart';
 import 'package:aishop/icons/icons.dart';
 import 'package:aishop/navigation/locator.dart';
 import 'package:aishop/navigation/routing/route_names.dart';
+import 'package:aishop/providers/search_provider.dart';
 import 'package:aishop/screens/cart/components/order_review.dart';
 import 'package:aishop/services/navigation_service.dart';
 import 'package:aishop/styles/theme.dart';
@@ -17,19 +18,21 @@ import 'package:aishop/widgets/shoes/shoes.dart';
 import 'package:aishop/widgets/tech/tech.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
+// class HomePage extends StatefulWidget {
+//   @override
+//   _HomePageState createState() => _HomePageState();
+// }
 
-class _HomePageState extends State<HomePage> {
-  bool isSearching = false;
+class HomePage extends StatelessWidget {
+  // bool isSearching = false;
 
   @override
   Widget build(BuildContext context) {
     contxt = context;
-    updateCartTotal();
+    final SearchProvider searchProvider = Provider.of<SearchProvider>(context);
+    // updateCartTotal();
     return Scaffold(
         backgroundColor: lightestgrey,
         appBar: PreferredSize(
@@ -66,11 +69,12 @@ class _HomePageState extends State<HomePage> {
                       size: 25,
                     ),
                     onPressed: () {
-                      setState(() {
-                        this.isSearching = true;
-                        locator<NavigationService>()
-                            .globalNavigateTo(SearchRoute, context);
-                      });
+                      searchProvider.search();
+                      // setState(() {
+                      //   this.isSearching = true;
+                      //   locator<NavigationService>()
+                      //       .globalNavigateTo(SearchRoute, context);
+                      // });
                     },
                   ),
                 ],
@@ -91,7 +95,6 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     locator<NavigationService>()
                         .globalNavigateTo(WishlistRoute, context);
-
                   },
                 ),
                 Padding(

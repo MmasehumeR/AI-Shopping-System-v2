@@ -1,5 +1,8 @@
 import 'dart:ui';
 
+import 'package:aishop/navigation/locator.dart';
+import 'package:aishop/navigation/routing/route_names.dart';
+import 'package:aishop/navigation/routing/router.dart';
 import 'package:aishop/screens/homepage/homepage.dart';
 import 'package:aishop/screens/login/loginscreen.dart';
 import 'package:aishop/services/databasemanager.dart';
@@ -7,6 +10,7 @@ import 'package:aishop/utils/authentication.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  setupLocator();
   runApp(MyApp());
 }
 
@@ -15,7 +19,7 @@ class MyApp extends StatefulWidget {
   State<StatefulWidget> createState() {
     return _MyAppState();
   }
-}  
+}
 
 class _MyAppState extends State<MyApp> {
   bool auto = false;
@@ -24,12 +28,13 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       scrollBehavior: MyCustomScrollBehavior(),
-      home: auto == false ? LoginScreen() : HomePage(),
+      title: 'AI Shop',
+      onGenerateRoute: generateRoute,
+      initialRoute: LoginRoute,
+      // home: auto == false ? LoginScreen() : HomePage(),
       debugShowCheckedModeBanner: false,
     );
   }
-
-
 
 //check if user is already logged in in the previous session.
   //get user info if logged in.
@@ -62,8 +67,55 @@ class MyCustomScrollBehavior extends MaterialScrollBehavior {
   // Override behavior methods and getters like dragDevices
   @override
   Set<PointerDeviceKind> get dragDevices => {
-    PointerDeviceKind.touch,
-    PointerDeviceKind.mouse,
-    // etc.
-  };
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        // etc.
+      };
 }
+
+// class AppPagesController extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     AuthProvider authProvider = Provider.of<AuthProvider>(context);
+
+//     return FutureBuilder(
+//       // Initialize FlutterFire:
+//       future: initialization,
+//       builder: (context, snapshot) {
+//         // Check for errors
+//         if (snapshot.hasError) {
+//           return Scaffold(
+//             body: Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [Text("Something went wrong")],
+//             ),
+//           );
+//         }
+
+//         // Once complete, show your application
+//         if (snapshot.connectionState == ConnectionState.done) {
+//           print(authProvider.status.toString());
+//           switch (authProvider.status) {
+//             case Status.Uninitialized:
+//               return Loading();
+//             case Status.Unauthenticated:
+//             case Status.Authenticating:
+//               return LoginScreen();
+//             case Status.Authenticated:
+//               return HomePage();
+//             default:
+//               return LoginScreen();
+//           }
+//         }
+
+//         // Otherwise, show something whilst waiting for initialization to complete
+//         return Scaffold(
+//           body: Column(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: [CircularProgressIndicator()],
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }

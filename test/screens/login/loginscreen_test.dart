@@ -9,7 +9,7 @@ import 'package:aishop/styles/textlink.dart';
 import 'package:aishop/styles/title.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart' show MediaQuery, MediaQueryData, Widget;
+// import 'package:flutter/widgets.dart' show MediaQuery, MediaQueryData, Widget;
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../Mocks/mock.dart';
@@ -146,24 +146,24 @@ main() async {
     print('');
   });
 
-  testWidgets('No account', (WidgetTester tester) async {
-    await tester.pumpWidget(testWidget);
+  // testWidgets('No account', (WidgetTester tester) async {
+  //   await tester.pumpWidget(testWidget);
 
-    expect(find.byType(PageTitle), findsOneWidget);
-    expect(emailField, findsOneWidget);
-    expect(passwordField, findsOneWidget);
-    expect(signinbutton, findsOneWidget);
-    expect(googlebutton, findsOneWidget);
-    expect(find.byType(TextLink), findsNWidgets(2));
-    expect(find.byType(OrDivider), findsOneWidget);
+  //   expect(find.byType(PageTitle), findsOneWidget);
+  //   expect(emailField, findsOneWidget);
+  //   expect(passwordField, findsOneWidget);
+  //   expect(signinbutton, findsOneWidget);
+  //   expect(googlebutton, findsOneWidget);
+  //   expect(find.byType(TextLink), findsNWidgets(2));
+  //   expect(find.byType(OrDivider), findsOneWidget);
 
-    final noAccountLink = find.widgetWithText(TextLink, "Not Registered?");
+  //   final noAccountLink = find.widgetWithText(TextLink, "Not Registered?");
 
-    await tester.tap(noAccountLink);
-    await tester.pumpAndSettle(Duration(seconds: 3));
-    expect(find.byType(RegisterScreen), findsOneWidget);
+  //   await tester.tap(noAccountLink);
+  //   await tester.pumpAndSettle(Duration(seconds: 3));
+  //   expect(find.byType(RegisterScreen), findsOneWidget);
 
-    print('======================');
-    print('');
-  });
+  //   print('======================');
+  //   print('');
+  // });
 }

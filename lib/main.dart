@@ -1,33 +1,40 @@
 import 'dart:ui';
-
 import 'package:aishop/navigation/locator.dart';
 import 'package:aishop/navigation/routing/route_names.dart';
 import 'package:aishop/navigation/routing/router.dart';
-import 'package:aishop/screens/homepage/homepage.dart';
-import 'package:aishop/screens/login/loginscreen.dart';
+import 'package:aishop/providers/checkout_address_provider.dart';
+import 'package:aishop/providers/order_review_provider.dart';
+import 'package:aishop/providers/profile_provider.dart';
+import 'package:aishop/providers/search_provider.dart';
 import 'package:aishop/services/databasemanager.dart';
 import 'package:aishop/utils/authentication.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   setupLocator();
-  runApp(MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider.value(value: SearchProvider.init()),
+    ChangeNotifierProvider.value(value: ProfileProvider.init()),
+    ChangeNotifierProvider.value(value: CheckoutAdressProvider.init()),
+    // ChangeNotifierProvider.value(value: OrderReviewProvider.init()),
+  ], child: MyApp()));
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return _MyAppState();
-  }
-}
+// class MyApp extends StatefulWidget {
+//   @override
+//   State<StatefulWidget> createState() {
+//     return _MyAppState();
+//   }
+// }
 
-class _MyAppState extends State<MyApp> {
+class MyApp extends StatelessWidget {
   bool auto = false;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      scrollBehavior: MyCustomScrollBehavior(),
+      // scrollBehavior: MyCustomScrollBehavior(),
       title: 'AI Shop',
       onGenerateRoute: generateRoute,
       initialRoute: LoginRoute,
@@ -40,11 +47,11 @@ class _MyAppState extends State<MyApp> {
   //get user info if logged in.
   Future getUserInfo() async {
     await getUser();
-    setState(() {
-      if (uid != null) {
-        auto = true;
-      }
-    });
+    // setState(() {
+    if (uid != null) {
+      auto = true;
+    }
+    // });
     print(uid);
   }
 
@@ -57,21 +64,21 @@ class _MyAppState extends State<MyApp> {
   }
 
   //remove debug banner in the corner
-  void initState() {
-    getUserInfo();
-    super.initState();
-  }
+  // void initState() {
+  //   getUserInfo();
+  //   super.initState();
+  // }
 }
 
-class MyCustomScrollBehavior extends MaterialScrollBehavior {
-  // Override behavior methods and getters like dragDevices
-  @override
-  Set<PointerDeviceKind> get dragDevices => {
-        PointerDeviceKind.touch,
-        PointerDeviceKind.mouse,
-        // etc.
-      };
-}
+// class MyCustomScrollBehavior extends MaterialScrollBehavior {
+//   // Override behavior methods and getters like dragDevices
+//   @override
+//   Set<PointerDeviceKind> get dragDevices => {
+//         PointerDeviceKind.touch,
+//         PointerDeviceKind.mouse,
+//         // etc.
+//       };
+// }
 
 // class AppPagesController extends StatelessWidget {
 //   @override

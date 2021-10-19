@@ -5,12 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class WishlistPage extends StatefulWidget {
-  @override
-  _Wishlist createState() => _Wishlist();
-}
+// class WishlistPage extends StatefulWidget {
+//   @override
+//   _Wishlist createState() => _Wishlist();
+// }
 
-class _Wishlist extends State<WishlistPage> {
+class WishlistPage extends StatelessWidget {
   final CollectionReference usersRef = FirebaseFirestore.instance
       .collection('Users')
       .doc(FirebaseAuth.instance.currentUser!.uid)

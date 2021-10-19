@@ -4,12 +4,12 @@ import 'package:aishop/widgets/appbar/appbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class SettingsPage extends StatefulWidget {
-  @override
-  _SettingsPageState createState() => _SettingsPageState();
-}
+// class SettingsPage extends StatefulWidget {
+//   @override
+//   _SettingsPageState createState() => _SettingsPageState();
+// }
 
-class _SettingsPageState extends State<SettingsPage> {
+class SettingsPage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

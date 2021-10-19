@@ -1,5 +1,8 @@
+import 'package:aishop/navigation/locator.dart';
+import 'package:aishop/navigation/routing/route_names.dart';
 import 'package:aishop/screens/homepage/homepage.dart';
 import 'package:aishop/screens/signup/registerscreen.dart';
+import 'package:aishop/services/navigation_service.dart';
 import 'package:aishop/services/networking.dart';
 import 'package:aishop/styles/google_round_button.dart';
 import 'package:aishop/styles/or_divider.dart';
@@ -34,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
   late TextEditingController userForgotP = TextEditingController();
   String longitude = "";
   String latitude = "";
-  late String Province="";
+  late String Province = "";
   late String cityname = "";
 
   late TextEditingController userPasswordController;
@@ -99,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
         'http://api.positionstack.com/v1/reverse?access_key=5e65a2bf717cff420bade43bf75f0cec&query=$latitude,$longitude');
     await networkHelper.getData();
     cityname = networkHelper.cityname;
-    Province=networkHelper.Province;
+    Province = networkHelper.Province;
   }
 
 //test keys
@@ -179,11 +182,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     .then((result) {
                                   if (result != null) {
                                     setState(() {
-                                      Navigator.push(
-                                          context,
-                                          new MaterialPageRoute(
-                                              builder: (context) =>
-                                                  HomePage()));
+                                      locator<NavigationService>()
+                                          .globalNavigateTo(HomeRoute, context);
                                     });
                                   } else {
                                     showDialog(
@@ -262,11 +262,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 }).catchError((error) {
                                   print('Sign in Error: $error');
                                   setState(() {
-                                    Navigator.push(
-                                        context,
-                                        new MaterialPageRoute(
-                                            builder: (context) =>
-                                                LoginScreen()));
+                                    locator<NavigationService>()
+                                        .globalNavigateTo(LoginRoute, context);
                                   });
                                 });
                               },
@@ -329,20 +326,23 @@ class _LoginScreenState extends State<LoginScreen> {
                                 text: "Not Registered?",
                                 align: Alignment.center,
                                 press: () => {
-                                  print(cityname),
-                                  Timer(Duration(seconds: 2), () {
-                                    Navigator.push(
-                                        context,
-                                        new MaterialPageRoute(
-                                            builder: (context) =>
-                                                RegisterScreen(
-                                                  cityName:
-                                                  cityname.toString(),
-                                                  /*longitude: longitude,
-                                                  latitude: latitude,*/
-                                                )));})
-                                })
-
+                                      print(cityname),
+                                      // Timer(Duration(seconds: 2), () {
+                                      locator<NavigationService>()
+                                          .globalNavigateTo(
+                                              RegistrationRoute, context)
+                                      //   Navigator.push(
+                                      //       context,
+                                      //       new MaterialPageRoute(
+                                      //           builder: (context) =>
+                                      //               RegisterScreen(
+                                      //                 cityName:
+                                      //                     cityname.toString(),
+                                      //                 /*longitude: longitude,
+                                      //             latitude: latitude,*/
+                                      //               )));
+                                      // })
+                                    })
 
                             //=====================================================
                           ])))

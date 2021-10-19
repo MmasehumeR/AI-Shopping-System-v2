@@ -1,14 +1,9 @@
 import 'package:aishop/addons/popop_menu_consts.dart';
 import 'package:aishop/icons/icons.dart';
-import 'package:aishop/screens/cart/checkout_page.dart';
-import 'package:aishop/screens/invoices/invoices.dart';
-import 'package:aishop/screens/login/loginscreen.dart';
-import 'package:aishop/screens/past_purchases/pastpurchase.dart';
-import 'package:aishop/screens/profile_page/edit_profile.dart';
-import 'package:aishop/screens/settings/settings.dart';
-import 'package:aishop/screens/wishlist/wislistscreen.dart';
+import 'package:aishop/navigation/locator.dart';
+import 'package:aishop/navigation/routing/route_names.dart';
+import 'package:aishop/services/navigation_service.dart';
 import 'package:aishop/styles/theme.dart';
-import 'package:aishop/utils/authentication.dart';
 import 'package:aishop/utils/prod_num_badges.dart';
 import 'package:aishop/widgets/appbar/choice_action.dart';
 import 'package:badges/badges.dart';
@@ -36,8 +31,8 @@ class MyAppBar extends AppBar {
                 ),
                 onPressed: () {
                   // Go to wishlist
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => WishlistPage()));
+                  locator<NavigationService>()
+                          .globalNavigateTo(WishlistRoute, context);
                 },
               ),
               Padding(
@@ -55,10 +50,8 @@ class MyAppBar extends AppBar {
                     ),
                     onPressed: () {
                       // Go to cart
-                      Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                              builder: (context) => CheckOutPage()));
+                      locator<NavigationService>()
+                          .globalNavigateTo(CheckOutRoute, context);
                     },
                   )),
               Padding(

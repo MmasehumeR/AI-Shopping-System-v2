@@ -1,5 +1,6 @@
-import 'package:aishop/screens/homepage/homepage.dart';
-import 'package:aishop/screens/login/loginscreen.dart';
+import 'package:aishop/navigation/locator.dart';
+import 'package:aishop/navigation/routing/route_names.dart';
+import 'package:aishop/services/navigation_service.dart';
 import 'package:aishop/styles/google_round_button.dart';
 import 'package:aishop/styles/or_divider.dart';
 import 'package:aishop/styles/round_button.dart';
@@ -450,11 +451,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                         userLastNameController
                                                             .text)));*/
                                         print('before pushing to homepage');
-                                        Navigator.push(
-                                            context,
-                                            new MaterialPageRoute(
-                                                builder: (context) =>
-                                                    HomePage()));
+                                        locator<NavigationService>()
+                                            .globalNavigateTo(
+                                                HomeRoute, context);
                                       });
                                     } else {
                                       showDialog(
@@ -540,11 +539,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     setState(() {
                                       loginStatus =
                                           'Error occured while Signing in';
-                                      Navigator.push(
-                                          context,
-                                          new MaterialPageRoute(
-                                              builder: (context) =>
-                                                  LoginScreen()));
+                                      locator<NavigationService>()
+                                          .globalNavigateTo(
+                                              LoginRoute, context);
                                       //loginStringColor = Colors.black54;
                                     });
                                   });
@@ -565,11 +562,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 align: Alignment.center,
                                 text: 'Already have an account? Login here.',
                                 press: () => {
-                                      Navigator.push(
-                                          context,
-                                          new MaterialPageRoute(
-                                              builder: (context) =>
-                                                  LoginScreen()))
+                                      locator<NavigationService>()
+                                          .globalNavigateTo(LoginRoute, context)
                                     })
                           ])))
             ])));

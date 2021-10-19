@@ -1,5 +1,3 @@
-import 'package:aishop/screens/cart/checkout_page.dart';
-import 'package:aishop/styles/icon_button.dart';
 import 'package:aishop/styles/theme.dart';
 import 'package:aishop/utils/authentication.dart';
 import 'package:aishop/widgets/appbar/appbar.dart';
@@ -19,7 +17,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return new Scaffold(
         appBar: MyAppBar(
           title: Text(
-            " ",
+            "Settings ",
           ),
           context: context,
         ),
@@ -30,49 +28,6 @@ class _SettingsPageState extends State<SettingsPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Container(
-                    height: 0,
-                    width: size.width * 0.3,
-                    color: mediumblack,
-                  ),
-                  Container(
-                    color: white,
-                    width: size.width * 0.7,
-                    height: 0,
-                    padding: EdgeInsets.only(right: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        CustomIconButton(
-                            icon: Icons.home,
-                            press: () => {Navigator.pop(context)}),
-                        CustomIconButton(icon: Icons.favorite, press: () => {}),
-                        CustomIconButton(icon: Icons.history, press: () => {}),
-                        CustomIconButton(
-                            icon: Icons.shopping_cart,
-                            press: () => {
-                                  Navigator.pop(context),
-                                  Navigator.push(
-                                      context,
-                                      new MaterialPageRoute(
-                                          builder: (context) => CheckOutPage()))
-                                }),
-                        CustomIconButton(
-                            icon: Icons.settings,
-                            press: () => {
-                                  Navigator.pop(context),
-                                  Navigator.push(
-                                      context,
-                                      new MaterialPageRoute(
-                                          builder: (context) => SettingsPage()))
-                                }),
-                      ],
-                    ),
-                  )
-                ],
-              ),
               Row(
                 children: <Widget>[
                   Container(

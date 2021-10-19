@@ -26,21 +26,21 @@ class _EditProfilePage extends State<EditProfilePage> {
     DocumentReference _documentReference = _doc.collection("info").doc(uid);
 
     _documentReference.get().then((documentSnapshot) => {
-      if (!documentSnapshot.exists)
-        {
-          print("Sorry, User profile not found."),
-        }
-      else
-        {
-          setState(() {
-            userFirstNameController.text = documentSnapshot.get("fname");
-            userLastNameController.text = documentSnapshot.get("lname");
-            userEmailController.text = documentSnapshot.get("email");
-            userBirthdayController.text = documentSnapshot.get("bday");
-            userLocationController.text = documentSnapshot.get("location");
-          })
-        }
-    });
+          if (!documentSnapshot.exists)
+            {
+              print("Sorry, User profile not found."),
+            }
+          else
+            {
+              setState(() {
+                userFirstNameController.text = documentSnapshot.get("fname");
+                userLastNameController.text = documentSnapshot.get("lname");
+                userEmailController.text = documentSnapshot.get("email");
+                userBirthdayController.text = documentSnapshot.get("bday");
+                userLocationController.text = documentSnapshot.get("location");
+              })
+            }
+        });
   }
 
   late TextEditingController userEmailController = TextEditingController();
@@ -51,7 +51,6 @@ class _EditProfilePage extends State<EditProfilePage> {
   bool _displayFNameValid = true;
   bool _displayLNameValid = true;
 
-
   late FocusNode textFocusNodeBirthday = FocusNode();
 
   late FocusNode textFocusNodeLocation = FocusNode();
@@ -61,33 +60,43 @@ class _EditProfilePage extends State<EditProfilePage> {
     super.initState();
   }
 
-  updateProfileData(){
-    setState((){
-      userFirstNameController.text.isEmpty ? _displayFNameValid = false :
-      _displayFNameValid = true;
-      userLastNameController.text.isEmpty ? _displayLNameValid = false :
-      _displayLNameValid = true;
+  updateProfileData() {
+    setState(() {
+      userFirstNameController.text.isEmpty
+          ? _displayFNameValid = false
+          : _displayFNameValid = true;
+      userLastNameController.text.isEmpty
+          ? _displayLNameValid = false
+          : _displayLNameValid = true;
 
-
-      if(_displayFNameValid && _displayLNameValid){
-        FirebaseFirestore.instance.collection('Users').doc(uid).collection('info').doc(uid).
-        update({'fname':userFirstNameController.text,
+      if (_displayFNameValid && _displayLNameValid) {
+        FirebaseFirestore.instance
+            .collection('Users')
+            .doc(uid)
+            .collection('info')
+            .doc(uid)
+            .update({
+          'fname': userFirstNameController.text,
           'lname': userLastNameController.text,
           'bday': userBirthdayController.text,
         });
 
-        if(userLocationController.text.isEmpty){
-          FirebaseFirestore.instance.collection('Users').doc(uid).collection('info').doc(uid).
-          update({'location': "*missing"});
-
+        if (userLocationController.text.isEmpty) {
+          FirebaseFirestore.instance
+              .collection('Users')
+              .doc(uid)
+              .collection('info')
+              .doc(uid)
+              .update({'location': "*missing"});
+        } else {
+          FirebaseFirestore.instance
+              .collection('Users')
+              .doc(uid)
+              .collection('info')
+              .doc(uid)
+              .update({'location': userLocationController.text});
         }
-        else{
-          FirebaseFirestore.instance.collection('Users').doc(uid).collection('info').doc(uid).
-          update({'location': userLocationController.text});
-        }
-
       }
-
     });
     SnackBar snackbar = SnackBar(content: Text("Profile updated!"));
     ScaffoldMessenger.of(context).showSnackBar(snackbar);
@@ -100,7 +109,7 @@ class _EditProfilePage extends State<EditProfilePage> {
     return new Scaffold(
         appBar: MyAppBar(
           title: Text(
-            " ",
+            "Profile",
           ),
           context: context,
         ),
@@ -110,50 +119,7 @@ class _EditProfilePage extends State<EditProfilePage> {
           height: size.height,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Container(
-                    height: 0,
-                    width: size.width * 0.3,
-                    color: lightblack,
-                  ),
-                  Container(
-                    color: white,
-                    width: size.width * 0.7,
-                    height: 0,
-                    padding: EdgeInsets.only(right: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        CustomIconButton(
-                            icon: Icons.home,
-                            press: () => {Navigator.pop(context)}),
-                        CustomIconButton(icon: Icons.favorite, press: () => {}),
-                        CustomIconButton(icon: Icons.history, press: () => {}),
-                        CustomIconButton(
-                            icon: Icons.shopping_cart,
-                            press: () => {
-                              Navigator.pop(context),
-                              Navigator.push(
-                                  context,
-                                  new MaterialPageRoute(
-                                      builder: (context) => CheckOutPage()))
-                            }),
-                        CustomIconButton(
-                            icon: Icons.settings,
-                            press: () => {
-                              Navigator.pop(context),
-                              Navigator.push(
-                                  context,
-                                  new MaterialPageRoute(
-                                      builder: (context) => SettingsPage()))
-                            }),
-                      ],
-                    ),
-                  )
-                ],
-              ),
+            children: <Widget>[ 
               Row(
                 children: <Widget>[
                   Container(
@@ -198,29 +164,29 @@ class _EditProfilePage extends State<EditProfilePage> {
                             ),
                           ),
                           Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 2.0),
-                              child: RaisedButton(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 2.0),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.white
+                                ),
                                 onPressed: () => updateProfileData(),
                                 child: Text(
                                   "Edit Profile Picture",
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 20.0,
-                                      fontWeight: FontWeight.bold
-
-                                  ),
-
+                                      fontWeight: FontWeight.bold),
                                 ),
-
                               )
 
-                            /*RoundTextField(
+                              /*RoundTextField(
                               autofocus: false,
                               preicon: Icon(Icons.alternate_email),
                               text: "Email",
                               control: userEmailController,
                             ),*/
-                          ),
+                              ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 15.0),
                             child: RoundTextField(
@@ -229,7 +195,6 @@ class _EditProfilePage extends State<EditProfilePage> {
                                 preicon: Icon(Icons.person),
                                 control: userFirstNameController),
                           ),
-
 
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 15.0),
@@ -245,60 +210,48 @@ class _EditProfilePage extends State<EditProfilePage> {
                                 autofocus: false,
                                 onSubmitted: (value) {
                                   textFocusNodeBirthday.unfocus();
-                                  FocusScope.of(context).requestFocus(
-                                      textFocusNodeLocation);
+                                  FocusScope.of(context)
+                                      .requestFocus(textFocusNodeLocation);
                                 },
                                 preicon: Icon(LineIcons.birthdayCake),
-                                margin:
-                                EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
                                 control: userBirthdayController,
                                 text: "Birthday",
-                                tap: () =>
-                                {
-                                  FocusScope.of(context)
-                                      .unfocus(),
-                                  showDatePicker(
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime(
-                                          DateTime
-                                              .now()
-                                              .year -
-                                              100,
-                                          01),
-                                      lastDate: DateTime.now(),
-                                      builder:
-                                          (BuildContext context,
-                                          picker) {
-                                        return Theme(
-                                          //TODO: change colors
-                                            data: ThemeData.dark()
-                                                .copyWith(
-                                              colorScheme:
-                                              ColorScheme
-                                                  .dark(
-                                                primary:
-                                                lightgrey, //highlighter
-                                                onPrimary:
-                                                black, //text highlighted
-                                                surface:
-                                                mediumblack,
-                                                onSurface: white,
-                                              ),
-                                              dialogBackgroundColor:
-                                              lightblack,
-                                            ),
-                                            child: (picker)!);
-                                      }).then((pickedDate) {
-                                    if (pickedDate != null) {
-                                      String formattedDate =
-                                      DateFormat('yyyy-MM-dd')
-                                          .format(pickedDate);
-                                      userBirthdayController
-                                          .text = formattedDate;
-                                    }
-                                  })
-                                }),
+                                tap: () => {
+                                      FocusScope.of(context).unfocus(),
+                                      showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime(
+                                              DateTime.now().year - 100, 01),
+                                          lastDate: DateTime.now(),
+                                          builder:
+                                              (BuildContext context, picker) {
+                                            return Theme(
+                                                //TODO: change colors
+                                                data: ThemeData.dark().copyWith(
+                                                  colorScheme: ColorScheme.dark(
+                                                    primary:
+                                                        lightgrey, //highlighter
+                                                    onPrimary:
+                                                        black, //text highlighted
+                                                    surface: mediumblack,
+                                                    onSurface: white,
+                                                  ),
+                                                  dialogBackgroundColor:
+                                                      lightblack,
+                                                ),
+                                                child: (picker)!);
+                                          }).then((pickedDate) {
+                                        if (pickedDate != null) {
+                                          String formattedDate =
+                                              DateFormat('yyyy-MM-dd')
+                                                  .format(pickedDate);
+                                          userBirthdayController.text =
+                                              formattedDate;
+                                        }
+                                      })
+                                    }),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 15.0),
@@ -312,11 +265,8 @@ class _EditProfilePage extends State<EditProfilePage> {
                           // ignore: deprecated_member_use
                           RoundButton(
                             text: 'UPDATE PROFILE',
-                              press: () => updateProfileData(),
-
-
+                            press: () => updateProfileData(),
                           ),
-
                         ],
                       ),
                     ]),

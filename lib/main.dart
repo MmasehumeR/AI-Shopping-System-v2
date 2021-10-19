@@ -2,8 +2,8 @@ import 'dart:ui';
 import 'package:aishop/navigation/locator.dart';
 import 'package:aishop/navigation/routing/route_names.dart';
 import 'package:aishop/navigation/routing/router.dart';
+import 'package:aishop/providers/auth_provider.dart';
 import 'package:aishop/providers/checkout_address_provider.dart';
-import 'package:aishop/providers/order_review_provider.dart';
 import 'package:aishop/providers/profile_provider.dart';
 import 'package:aishop/providers/search_provider.dart';
 import 'package:aishop/services/databasemanager.dart';
@@ -17,7 +17,7 @@ void main() {
     ChangeNotifierProvider.value(value: SearchProvider.init()),
     ChangeNotifierProvider.value(value: ProfileProvider.init()),
     ChangeNotifierProvider.value(value: CheckoutAdressProvider.init()),
-    // ChangeNotifierProvider.value(value: OrderReviewProvider.init()),
+    ChangeNotifierProvider.value(value: AuthProvider.init()),
   ], child: MyApp()));
 }
 

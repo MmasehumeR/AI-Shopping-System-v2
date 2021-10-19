@@ -1,9 +1,7 @@
 import 'package:aishop/navigation/locator.dart';
 import 'package:aishop/navigation/routing/route_names.dart';
-import 'package:aishop/screens/homepage/homepage.dart';
-import 'package:aishop/screens/signup/registerscreen.dart';
+import 'package:aishop/providers/auth_provider.dart';
 import 'package:aishop/services/navigation_service.dart';
-import 'package:aishop/services/networking.dart';
 import 'package:aishop/styles/google_round_button.dart';
 import 'package:aishop/styles/or_divider.dart';
 import 'package:aishop/styles/round_button.dart';
@@ -13,103 +11,18 @@ import 'package:aishop/styles/sidepanel.dart';
 import 'package:aishop/styles/textlink.dart';
 import 'package:aishop/styles/theme.dart';
 import 'package:aishop/styles/title.dart';
-import 'package:aishop/utils/authentication.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:aishop/services/databasemanager.dart';
-import 'dart:async';
 
-class LoginScreen extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return _LoginScreenState();
-  }
-}
-
-// ignore: must_be_immutable
-class _LoginScreenState extends State<LoginScreen> {
-//declare and initialize the controllers and focus on each field.
-//initialize variable to check if user is editing the specific fiels.
-  late TextEditingController userEmailController;
-  bool _isEditingEmail = false;
-  late TextEditingController userForgotP = TextEditingController();
-  String longitude = "";
-  String latitude = "";
-  late String Province = "";
-  late String cityname = "";
-
-  late TextEditingController userPasswordController;
-
-  bool _isEditingpassword = false;
-
-  @override
-  void initState() {
-    getLocationData();
-    getProducts();
-    userEmailController = TextEditingController();
-    userEmailController.text = '';
-
-    userPasswordController = TextEditingController();
-    userPasswordController.text = '';
-    super.initState();
-  }
-
-  Future getProducts() async {
-    await DatabaseManager().setBooks();
-    await DatabaseManager().setClothes();
-    await DatabaseManager().setKitchen();
-    await DatabaseManager().setShoes();
-    await DatabaseManager().setTech();
-  }
-
-  String? _validateEmail(String value) {
-    value = value.trim();
-// validate the email input that the usr gives.
-    if (userEmailController.text.isNotEmpty) {
-      if (value.isEmpty) {
-        return 'Email can\'t be empty';
-      } else if (!value.contains(RegExp(
-          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+"))) {
-        return 'Enter a correct email address';
-      }
-    }
-
-    return null;
-  }
-
-  String? _validatePassword(String value) {
-    value = value.trim();
-//makesure user creates a strong password
-    if (userPasswordController.text.isNotEmpty) {
-      if (value.isEmpty) {
-        return 'Please enter password';
-      }
-    }
-
-    return null;
-  }
-
-  void getLocationData() async {
-    print("running location data function");
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.bestForNavigation);
-    print("done with Geolocator+${position.longitude}");
-    longitude = await position.longitude.toString();
-    latitude = await position.latitude.toString();
-    NetworkHelper networkHelper = await NetworkHelper(
-        'http://api.positionstack.com/v1/reverse?access_key=5e65a2bf717cff420bade43bf75f0cec&query=$latitude,$longitude');
-    await networkHelper.getData();
-    cityname = networkHelper.cityname;
-    Province = networkHelper.Province;
-  }
-
+class LoginScreen extends StatelessWidget {
 //test keys
   static const notRegisteredTextKey = Key('notRegisteredTextKey');
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    final AuthProvider authProvider = Provider.of<AuthProvider>(context);
     return new Scaffold(
         body: Container(
             width: size.width,
@@ -137,17 +50,16 @@ class _LoginScreenState extends State<LoginScreen> {
                             RoundTextField(
                               keyboardType: TextInputType.emailAddress,
                               textInputAction: TextInputAction.next,
-                              control: userEmailController,
+                              control: authProvider.email,
                               text: "Email",
                               autofocus: false,
                               preicon: Icon(LineIcons.user),
                               onChanged: (value) {
-                                setState(() {
-                                  _isEditingEmail = true;
-                                });
+                                authProvider.editsEmail();
                               },
-                              errorText: _isEditingEmail
-                                  ? _validateEmail(userEmailController.text)
+                              errorText: authProvider.isEditingEmail
+                                  ? authProvider
+                                      .validateEmail(authProvider.email.text)
                                   : "",
                               errorstyle: TextStyle(
                                 color: Colors.black54,
@@ -156,18 +68,16 @@ class _LoginScreenState extends State<LoginScreen> {
                             //=============================================
                             //Password text field
                             RoundPasswordField(
-                              control: userPasswordController,
+                              control: authProvider.password,
                               text: "Password",
                               icon: Icon(LineIcons.key),
                               autofocus: false,
                               onChanged: (value) {
-                                setState(() {
-                                  _isEditingpassword = true;
-                                });
+                                authProvider.editsPassword();
                               },
-                              errorText: _isEditingpassword
-                                  ? _validatePassword(
-                                      userPasswordController.text)
+                              errorText: authProvider.isEditingPassword
+                                  ? authProvider.validatePassword(
+                                      authProvider.password.text)
                                   : "",
                               errorstyle: TextStyle(color: Colors.black54),
                             ),
@@ -176,15 +86,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             RoundButton(
                               text: "LOGIN",
                               press: () async {
-                                await signInWithEmailPassword(
-                                        userEmailController.text,
-                                        userPasswordController.text)
+                                await authProvider
+                                    .signInWithEmailPassword()
                                     .then((result) {
                                   if (result != null) {
-                                    setState(() {
-                                      locator<NavigationService>()
-                                          .globalNavigateTo(HomeRoute, context);
-                                    });
+                                    authProvider.clearController();
+                                    locator<NavigationService>()
+                                        .globalNavigateTo(HomeRoute, context);
                                   } else {
                                     showDialog(
                                         context: context,
@@ -261,10 +169,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   }
                                 }).catchError((error) {
                                   print('Sign in Error: $error');
-                                  setState(() {
-                                    locator<NavigationService>()
-                                        .globalNavigateTo(LoginRoute, context);
-                                  });
+                                  authProvider.clearController();
+                                  locator<NavigationService>()
+                                      .globalNavigateTo(LoginRoute, context);
                                 });
                               },
                             ),
@@ -284,14 +191,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   icon: Icon(LineIcons.user),
                                                   labelText: 'E-mail',
                                                 ),
-                                                controller: userForgotP,
+                                                controller:
+                                                    authProvider.forgotPassword,
                                               ),
                                             ],
                                           ),
                                           buttons: [
                                             DialogButton(
                                               onPressed: () {
-                                                resetPassword(userForgotP.text);
+                                                authProvider.resetPassword(
+                                                    authProvider
+                                                        .forgotPassword.text);
 
                                                 Navigator.pop(context);
                                               },
@@ -326,7 +236,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 text: "Not Registered?",
                                 align: Alignment.center,
                                 press: () => {
-                                      print(cityname),
+                                      print(authProvider.cityname),
                                       // Timer(Duration(seconds: 2), () {
                                       locator<NavigationService>()
                                           .globalNavigateTo(

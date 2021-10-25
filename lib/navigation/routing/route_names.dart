@@ -22,3 +22,4 @@ const String CheckOutDeliveryRoute = "checkout_delivery";
 const String CheckOutPaymentRoute = "checkout_payment";
 const String PageControllerRoute = "page";
 const String FirstDeliveryRoute = "first_delivery";
+const String VerificationRoute = "verification";

@@ -15,8 +15,6 @@ class Search extends StatelessWidget {
         title: TextField(
           onChanged: (val) {
             searchProvider.initSearch(val);
-            // isSearching = true;
-            // searchvalue = capitalizedValue.length;
           },
           style: TextStyle(color: Colors.white),
           decoration: InputDecoration(
@@ -26,19 +24,9 @@ class Search extends StatelessWidget {
               ),
               hintText: "Search",
               hintStyle: TextStyle(color: Colors.white)),
-          // icon: Icon(
-          //   Icons.cancel,
-          //   color: white,
-          // ),
-          // onPressed: () {
-          //   setState(() {
-          //     TextField.clear();
-          //   });
-          // },
         ),
         backgroundColor: Colors.black,
       ),
-      // iconTheme: IconThemeData(color: Colors.white)),
       //Body of the home page
       body: searchProvider.capitalizedValue.length == 1
           ? Container(

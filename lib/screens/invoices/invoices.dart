@@ -6,12 +6,7 @@ import 'package:aishop/styles/theme.dart';
 import 'package:aishop/widgets/appbar/appbar.dart';
 import 'package:flutter/material.dart';
 
-class InvoicesPage extends StatefulWidget {
-  @override
-  Invoices createState() => Invoices();
-}
-
-class Invoices extends State<InvoicesPage> {
+class InvoicesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     updateCartTotal();

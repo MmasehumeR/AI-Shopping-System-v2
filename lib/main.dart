@@ -1,13 +1,16 @@
-import 'dart:ui';
 import 'package:aishop/navigation/locator.dart';
 import 'package:aishop/navigation/routing/route_names.dart';
 import 'package:aishop/navigation/routing/router.dart';
 import 'package:aishop/providers/auth_provider.dart';
 import 'package:aishop/providers/checkout_address_provider.dart';
+import 'package:aishop/providers/first_delivery_provider.dart';
 import 'package:aishop/providers/profile_provider.dart';
+import 'package:aishop/providers/register_provider.dart';
 import 'package:aishop/providers/search_provider.dart';
+import 'package:aishop/providers/verification_provider.dart';
 import 'package:aishop/services/databasemanager.dart';
 import 'package:aishop/utils/authentication.dart';
+import 'package:aishop/utils/costants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +21,9 @@ void main() {
     ChangeNotifierProvider.value(value: ProfileProvider.init()),
     ChangeNotifierProvider.value(value: CheckoutAdressProvider.init()),
     ChangeNotifierProvider.value(value: AuthProvider.init()),
+    ChangeNotifierProvider.value(value: RegisterProvider.init()),
+    ChangeNotifierProvider.value(value: VerificationProvider.init()),
+    ChangeNotifierProvider.value(value: FirstDeliveryProvider.init()),
   ], child: MyApp()));
 }
 

@@ -1,21 +1,11 @@
 import 'package:aishop/styles/theme.dart';
+import 'package:aishop/utils/costants.dart';
 import 'package:aishop/widgets/appbar/appbar.dart';
 import 'package:aishop/widgets/wishlist_model/wishlist_product_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-// class WishlistPage extends StatefulWidget {
-//   @override
-//   _Wishlist createState() => _Wishlist();
-// }
-
 class WishlistPage extends StatelessWidget {
-  final CollectionReference usersRef = FirebaseFirestore.instance
-      .collection('Users')
-      .doc(FirebaseAuth.instance.currentUser!.uid)
-      .collection("Wishlist");
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +17,7 @@ class WishlistPage extends StatelessWidget {
         context: context,
       ),
       body: new StreamBuilder<QuerySnapshot>(
-        stream: usersRef.snapshots(),
+        stream: wishlistRef.snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return SizedBox(
@@ -57,7 +47,7 @@ class WishlistPage extends StatelessWidget {
   }
 
   etdata() async {
-    return usersRef;
+    return wishlistRef;
   }
 }
 

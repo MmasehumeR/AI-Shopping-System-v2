@@ -1,9 +1,13 @@
 import 'package:aishop/models/user_model.dart';
+import 'package:aishop/navigation/locator.dart';
+import 'package:aishop/navigation/routing/route_names.dart';
 import 'package:aishop/services/databasemanager.dart';
+import 'package:aishop/services/navigation_service.dart';
 import 'package:aishop/services/networking.dart';
 import 'package:aishop/services/user_service.dart';
 import 'package:aishop/utils/authentication.dart';
 import 'package:aishop/utils/costants.dart';
+import 'package:aishop/widgets/appbar/appbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -26,6 +30,18 @@ class AuthProvider extends ChangeNotifier {
   String cityname = "";
   String dropdownvalue = " ";
   String loginStatus = "";
+  var dropDownItems = [
+    " ",
+    "Limpopo",
+    "Gauteng",
+    "Free State",
+    "Western Cape",
+    "KwaZulu-Natal",
+    "North West",
+    "Northern Cape",
+    "Eastern Cape",
+    "Mpumalanga"
+  ];
 
   //  getter
   UserModel get userModel => _userModel;
@@ -44,35 +60,47 @@ class AuthProvider extends ChangeNotifier {
   TextEditingController location = TextEditingController();
   TextEditingController province = TextEditingController();
 
-  Future<User?> signInWithEmailPassword() async {
-    await Firebase.initializeApp();
-    User? user;
+  Future<bool> signInWithEmailPassword() async {
+    // await Firebase.initializeApp();
+    // User? user;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
       _status = Status.Authenticating;
       notifyListeners();
-      UserCredential userCredential = await auth.signInWithEmailAndPassword(
+      await auth
+          .signInWithEmailAndPassword(
         email: email.text.trim(),
         password: password.text.trim(),
-      );
-      user = userCredential.user;
+      )
+          .then((value) async {
+        await prefs.setString("id", value.user!.uid);
+        // await firebaseFiretore
+        //     .collection('Users')
+        //     .doc( user.uid)
+        //     .collection('info')
+        //     .doc( user.uid)
+        //     .get()
+        //     .then((DocumentSnapshot ds) =>
+        //         {Location = ds.get('location'), Province = ds.get('province')});
+      });
 
-      if (user != null) {
-        uid = user.uid;
-        userEmail = user.email;
+      // if (user != null) {
+      //   // uid = user.uid;
+      //   // userEmail = user.email;
 
-        // SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setBool('auth', true);
+      //   // SharedPreferences prefs = await SharedPreferences.getInstance();
+      //   await prefs.setBool('auth', true);
 
-        await firebaseFiretore
-            .collection('Users')
-            .doc(uid)
-            .collection('info')
-            .doc(uid)
-            .get()
-            .then((DocumentSnapshot ds) =>
-                {location = ds.get('location'), province = ds.get('province')});
-      }
+      //   await firebaseFiretore
+      //       .collection('Users')
+      //       .doc( user.uid)
+      //       .collection('info')
+      //       .doc( user.uid)
+      //       .get()
+      //       .then((DocumentSnapshot ds) =>
+      //           {location = ds.get('location'), province = ds.get('province')});
+      // }
+      return true;
     } on FirebaseAuthException catch (e) {
       _status = Status.Unauthenticated;
       notifyListeners();
@@ -81,14 +109,12 @@ class AuthProvider extends ChangeNotifier {
       } else if (e.code == 'wrong-password') {
         print('Wrong password provided.');
       }
+      return false;
     }
-
-    return user;
   }
 
-  Future<User?> registerWithEmailPassword() async {
+  Future<bool> registerWithEmailPassword() async {
     await Firebase.initializeApp();
-    User? user;
 
     try {
       _status = Status.Authenticating;
@@ -107,16 +133,12 @@ class AuthProvider extends ChangeNotifier {
             birthday: birthday.text.trim(),
             province: province.text.trim(),
             location: location.text.trim());
-        // return true;
+      }).catchError((error) {
+        print('Sign in Error: $error');
+        loginStatus = 'Error occured while Signing in';
+        locator<NavigationService>().globalNavigateTo(LoginRoute, contxt);
       });
-
-      // user = userCredential.user;
-
-      // if (user != null) {
-      //   uid = user.uid;
-      //   userEmail = user.email;
-      // }
-
+      return true;
     } on FirebaseAuthException catch (e) {
       _status = Status.Unauthenticated;
       notifyListeners();
@@ -125,71 +147,73 @@ class AuthProvider extends ChangeNotifier {
       } else if (e.code == 'email-already-in-use') {
         print('An account already exists for that email.');
       }
+      return false;
     } catch (e) {
       _status = Status.Unauthenticated;
       notifyListeners();
       print(e);
+      return false;
     }
-
-    notifyListeners();
-    return user;
   }
 
-//   Future<User?> signInWithGoogle(loc, prov) async {
-//   // Initialize Firebase
-//   await Firebase.initializeApp();
-//   User? user;
+  // Future signOut() async {
+  //   auth.signOut();
+  //   _status = Status.Unauthenticated;
+  //   notifyListeners();
+  //   return Future.delayed(Duration.zero);
+  // }
 
-//   location = loc;
-//   province = prov;
+  Future<bool> signInWithGoogle() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    try {
+      _status = Status.Authenticating;
+      notifyListeners();
+      await auth.signInWithPopup(googleAuthProvider).then((result) async {
+        prefs.setBool('auth', true);
+        FirebaseFirestore.instance
+            .collection('TestUsers')
+            .doc(user.uid)
+            .collection('info')
+            .doc(user.uid)
+            .get()
+            .then((DocumentSnapshot documentSnapshot) => {
+                  if (!documentSnapshot.exists)
+                    {
+                      print("user added"),
+                      FirebaseFirestore.instance
+                          .collection('TestUsers')
+                          .doc(user.uid)
+                          .collection("info")
+                          .doc(user.uid)
+                          .set({
+                        'fname': user.displayName!.split(" ")[0],
+                        'lname': user.displayName!.split(" ")[1],
+                        'email': user.email,
+                        'bday': "*missing",
+                        "province": province.text.trim(),
+                        "location": location.text.trim()
+                      })
+                    }
+                  else
+                    {print("user exists in database")}
+                });
+      });
+      return true;
+    } catch (e) {
+      _status = Status.Unauthenticated;
+      notifyListeners();
+      print(e);
+      return false;
+    }
+  }
 
-//   // The `GoogleAuthProvider` can only be used while running on the web
-//   // GoogleAuthProvider authProvider = GoogleAuthProvider();
-
-//   try {
-//     final UserCredential userCredential =
-//     await auth.signInWithPopup(googleAuthProvider);
-
-//     user = userCredential.user;
-//   } catch (e) {
-//     print(e);
-//   }
-
-//   if (user != null) {
-//     uid = user.uid;
-//     name = user.displayName as TextEditingController;
-//     userEmail = user.email;
-//     imageUrl = user.photoURL;
-
-//     FirebaseFirestore.instance
-//         .collection('Users')
-//         .doc(uid).collection('info').doc(uid).get()
-//         .then((DocumentSnapshot documentSnapshot) =>
-//     {
-//       if(!documentSnapshot.exists){
-//         print("user added"),
-//         FirebaseFirestore.instance.collection('Users').doc(uid).collection("info").doc(uid).set(
-//             {
-//               'fname': name!.split(" ")[0],
-//               'lname':name!.split(" ")[1],
-//               'email':userEmail,
-//               'bday':"*missing",
-//               'location': location,
-//               'province' : province
-//             }
-//         )
-//       }
-//       else{
-//         print("user exists in database")
-//       }
-//     });
-
-//     SharedPreferences prefs = await SharedPreferences.getInstance();
-//     prefs.setBool('auth', true);
-//   }
-
-//   return user;
-// }
+  void signOutGoogle() async {
+    await googleSignIn.signOut();
+    _status = Status.Unauthenticated;
+    notifyListeners();
+    print("User signed out of Google account");
+    return Future.delayed(Duration.zero);
+  }
 
   String? validateEmail(String value) {
     value = value.trim();
@@ -281,9 +305,14 @@ class AuthProvider extends ChangeNotifier {
 
   void clearController() {
     name.text = "";
+    surname.text = "";
     password.text = "";
     forgotPassword.text = "";
+    confirmPassword.text = "";
     email.text = "";
+    province.text = "";
+    location.text = "";
+    birthday.text = "";
   }
 
   void getLocationData() async {
@@ -293,7 +322,7 @@ class AuthProvider extends ChangeNotifier {
     print("done with Geolocator+${position.longitude}");
     longitude = position.longitude.toString();
     latitude = position.latitude.toString();
-    NetworkHelper networkHelper = await NetworkHelper(
+    NetworkHelper networkHelper = NetworkHelper(
         'http://api.positionstack.com/v1/reverse?access_key=5e65a2bf717cff420bade43bf75f0cec&query=$latitude,$longitude');
     await networkHelper.getData();
     cityname = networkHelper.cityname;

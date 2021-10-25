@@ -16,6 +16,7 @@ import 'package:aishop/screens/profile_page/edit_profile.dart';
 import 'package:aishop/screens/search/search.dart';
 import 'package:aishop/screens/settings/settings.dart';
 import 'package:aishop/screens/signup/registerscreen.dart';
+import 'package:aishop/screens/verification_page/verifyscreen.dart';
 import 'package:aishop/screens/wishlist/wislistscreen.dart';
 import 'package:flutter/material.dart';
 
@@ -58,6 +59,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return _getPageRoute(CheckOutDelivery());
      case CheckOutPaymentRoute:
       return _getPageRoute(CheckOutPayment());
+      case VerificationRoute:
+      return _getPageRoute(VerifyScreen());
     // case PageControllerRoute:
     //   return _getPageRoute(AppPagesController());
     default:

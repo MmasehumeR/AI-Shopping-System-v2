@@ -1,22 +1,14 @@
 //this class is used to design the google button with a white background and a black border
 
-
-import 'package:aishop/screens/homepage/homepage.dart';
+import 'package:aishop/navigation/locator.dart';
+import 'package:aishop/navigation/routing/route_names.dart';
+import 'package:aishop/providers/auth_provider.dart';
+import 'package:aishop/services/navigation_service.dart';
 import 'package:aishop/styles/theme.dart';
-import 'package:aishop/utils/authentication.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class GoogleRoundButton extends StatefulWidget {
-  GoogleRoundButton({this.location, this.province});
-  final location;
-  final province;
-  @override
-  State<StatefulWidget> createState() {
-    return _GoogleButtonState();
-  }
-}
-
-class _GoogleButtonState extends State<GoogleRoundButton> {
+class GoogleRoundButton extends StatelessWidget {
   late final text;
   late final press;
   late final Color color, textColor;
@@ -25,6 +17,7 @@ class _GoogleButtonState extends State<GoogleRoundButton> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    final AuthProvider signin = Provider.of<AuthProvider>(context);
     return Container(
         height: 50,
         width: size.width,
@@ -41,13 +34,14 @@ class _GoogleButtonState extends State<GoogleRoundButton> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(100))),
           onPressed: () async {
-            await signInWithGoogle(widget.location, widget.province).then((result) {
-              if (result != null) {
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(builder: (context) => HomePage()),
-                );
-              }
+            await signin.signInWithGoogle().then((result) {
+              // if (result != null) {
+              locator<NavigationService>().globalNavigateTo(HomeRoute, context);
+              // Navigator.push(
+              //   context,
+              //   new MaterialPageRoute(builder: (context) => HomePage()),
+              // );
+              // }
             }).catchError((error) {
               print('Registration Error: $error');
             });

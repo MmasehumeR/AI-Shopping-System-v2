@@ -1,5 +1,6 @@
 import 'package:aishop/navigation/locator.dart';
 import 'package:aishop/navigation/routing/route_names.dart';
+import 'package:aishop/providers/first_delivery_provider.dart';
 import 'package:aishop/screens/address/newaddress.dart';
 import 'package:aishop/screens/cart/components/order_review.dart';
 import 'package:aishop/screens/homepage/homepage.dart';
@@ -8,50 +9,17 @@ import 'package:aishop/styles/round_textfield.dart';
 import 'package:aishop/styles/textlink.dart';
 import 'package:aishop/styles/theme.dart';
 import 'package:aishop/utils/authentication.dart';
+import 'package:aishop/utils/costants.dart';
 import 'package:aishop/widgets/appbar/appbar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-class FirstDelivaryPage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return _FirstDelivaryPage();
-  }
-}
-
-class _FirstDelivaryPage extends State<FirstDelivaryPage> {
-  Future getUserInfofromdb() async {
-    FirebaseFirestore _firestore = FirebaseFirestore.instance;
-    CollectionReference _collectionReference = _firestore.collection("Users");
-    DocumentReference _doc = _collectionReference.doc(uid);
-    DocumentReference _documentReference = _doc.collection("info").doc(uid);
-
-    _documentReference.get().then((documentSnapshot) => {
-          if (!documentSnapshot.exists)
-            {
-              print("Sorry, User profile not found."),
-            }
-          else
-            {
-              setState(() {
-                userLocationController.text = documentSnapshot.get("location");
-              })
-            }
-        });
-  }
-
-  late TextEditingController userLocationController = TextEditingController();
-
-  void initState() {
-    getUserInfofromdb();
-    super.initState();
-  }
-
-  late String name, streetAdd, house, city, province, zipcode;
+class FirstDelivaryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final FirstDeliveryProvider firstProvider = Provider.of<FirstDeliveryProvider>(context);
     return Scaffold(
       appBar: MyAppBar(
         title: Text(
@@ -115,7 +83,7 @@ class _FirstDelivaryPage extends State<FirstDelivaryPage> {
                                                           Icons.location_pin),
                                                       text: "Location",
                                                       control:
-                                                          userLocationController,
+                                                          firstProvider.location,
                                                     ),
                                                   ],
                                                 ),
@@ -285,7 +253,7 @@ class _FirstDelivaryPage extends State<FirstDelivaryPage> {
                                                           Icons.location_pin),
                                                       text: "Location",
                                                       control:
-                                                          userLocationController,
+                                                          firstProvider.location,
                                                     ),
                                                   ],
                                                 ),
@@ -501,7 +469,7 @@ class _FirstDelivaryPage extends State<FirstDelivaryPage> {
                           height: 50,
                           child: TextFormField(
                             onChanged: (otherstreetAdd) {
-                              streetAdd = otherstreetAdd;
+                              firstProvider.streetAdd = otherstreetAdd;
                             },
                             decoration: InputDecoration(
                               fillColor: black,
@@ -577,7 +545,7 @@ class _FirstDelivaryPage extends State<FirstDelivaryPage> {
                           height: 50,
                           child: TextFormField(
                             onChanged: (othercity) {
-                              city = othercity;
+                              firstProvider.city = othercity;
                             },
                             decoration: InputDecoration(
                               fillColor: black,
@@ -667,7 +635,7 @@ class _FirstDelivaryPage extends State<FirstDelivaryPage> {
                           height: 50,
                           child: TextFormField(
                             onChanged: (otherzipcode) {
-                              zipcode = otherzipcode;
+                              firstProvider.zipcode = otherzipcode;
                             },
                             decoration: InputDecoration(
                               fillColor: white,
@@ -740,12 +708,12 @@ class _FirstDelivaryPage extends State<FirstDelivaryPage> {
                                                 TextStyle(color: Colors.black)),
                                         onPressed: () {
                                           NewAddress().otheraddress(
-                                              name,
-                                              streetAdd,
-                                              house,
-                                              city,
-                                              province,
-                                              zipcode,
+                                              firstProvider.name,
+                                              firstProvider.streetAdd,
+                                              firstProvider.house,
+                                              firstProvider.city,
+                                              firstProvider.province,
+                                              firstProvider.zipcode,
                                               uid);
                                           locator<NavigationService>()
                                               .globalNavigateTo(

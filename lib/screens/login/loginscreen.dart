@@ -237,21 +237,9 @@ class LoginScreen extends StatelessWidget {
                                 align: Alignment.center,
                                 press: () => {
                                       print(authProvider.cityname),
-                                      // Timer(Duration(seconds: 2), () {
                                       locator<NavigationService>()
                                           .globalNavigateTo(
                                               RegistrationRoute, context)
-                                      //   Navigator.push(
-                                      //       context,
-                                      //       new MaterialPageRoute(
-                                      //           builder: (context) =>
-                                      //               RegisterScreen(
-                                      //                 cityName:
-                                      //                     cityname.toString(),
-                                      //                 /*longitude: longitude,
-                                      //             latitude: latitude,*/
-                                      //               )));
-                                      // })
                                     })
 
                             //=====================================================

@@ -1,5 +1,6 @@
 import 'package:aishop/navigation/locator.dart';
 import 'package:aishop/navigation/routing/route_names.dart';
+import 'package:aishop/providers/register_provider.dart';
 import 'package:aishop/services/navigation_service.dart';
 import 'package:aishop/styles/google_round_button.dart';
 import 'package:aishop/styles/or_divider.dart';
@@ -11,59 +12,16 @@ import 'package:aishop/styles/textlink.dart';
 import 'package:aishop/styles/theme.dart';
 import 'package:aishop/styles/title.dart';
 import 'package:aishop/utils/authentication.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:provider/provider.dart';
 
-class RegisterScreen extends StatefulWidget {
-  RegisterScreen({this.cityName});
-  final cityName;
-
-  State<StatefulWidget> createState() {
-    return _RegisterScreenState();
-  }
-}
-
-//ignore: must_be_immutable
-class _RegisterScreenState extends State<RegisterScreen> {
-//declare and initial the cfield controllers, the focus and check if user is editing the field.
-  late TextEditingController userEmailController;
-  bool _isEditingEmail = false;
-  var dropDownItems = [
-    " ",
-    "Limpopo",
-    "Gauteng",
-    "Free State",
-    "Western Cape",
-    "KwaZulu-Natal",
-    "North West",
-    "Northern Cape",
-    "Eastern Cape",
-    "Mpumalanga"
-  ];
-
-  @override
-  late TextEditingController userPasswordController;
-  bool _isEditingpassword = false;
-  late String dropdownvalue = " ";
-  String cityname = "";
-  String loginStatus = "";
-  String province = " ";
-  late TextEditingController userConfirmPasswordController;
-  late TextEditingController userFirstNameController;
-  late TextEditingController userLastNameController;
-  late TextEditingController userBirthdayController;
-  late TextEditingController userLocationController;
-  late TextEditingController userProvinceController;
-
+class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      cityname = widget.cityName.toString();
-    });
     Size size = MediaQuery.of(context).size;
-
+    final RegisterProvider regProvider = Provider.of<RegisterProvider>(context);
     return Scaffold(
         body: Container(
             width: size.width,
@@ -95,7 +53,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     preicon: Icon(LineIcons.user),
                                     autofocus: false,
                                     margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                    control: userFirstNameController,
+                                    control: regProvider.name,
                                     text: "First Name",
                                   )),
                                   //====================================================================================row
@@ -104,7 +62,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     autofocus: false,
                                     preicon: Icon(LineIcons.user),
                                     margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                    control: userLastNameController,
+                                    control: regProvider.surname,
                                     text: "Last Name",
                                   ))
                                 ]
@@ -124,17 +82,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         keyboardType:
                                             TextInputType.emailAddress,
                                         textInputAction: TextInputAction.next,
-                                        control: userEmailController,
+                                        control: regProvider.email,
                                         text: "Email",
                                         autofocus: false,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _isEditingEmail = true;
-                                          });
-                                        },
-                                        errorText: _isEditingEmail
-                                            ? _validateEmail(
-                                                userEmailController.text)
+                                        onChanged: (value) =>
+                                            // regProvider.isEditingEmail,
+                                            {regProvider.editsEmail()
+                                            },
+                                        errorText: regProvider.isEditingEmail
+                                            ? regProvider.validateEmail(
+                                                regProvider.email.text)
                                             : null,
                                         errorstyle:
                                             TextStyle(color: Colors.black54),
@@ -147,7 +104,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           preicon: Icon(LineIcons.birthdayCake),
                                           margin:
                                               EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                          control: userBirthdayController,
+                                          control: regProvider.birthday,
                                           text: "Birthday",
                                           tap: () => {
                                                 FocusScope.of(context)
@@ -187,8 +144,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                     String formattedDate =
                                                         DateFormat('yyyy-MM-dd')
                                                             .format(pickedDate);
-                                                    userBirthdayController
-                                                        .text = formattedDate;
+                                                    regProvider.birthday.text =
+                                                        formattedDate;
                                                   }
                                                 })
                                               }))
@@ -206,15 +163,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
                                     text: "Password",
                                     autofocus: false,
-                                    control: userPasswordController,
+                                    control: regProvider.password,
                                     onChanged: (value) {
-                                      setState(() {
-                                        _isEditingpassword = true;
-                                      });
+                                      regProvider.editsPassword();
                                     },
-                                    errorText: _isEditingpassword
-                                        ? _validatePassword(
-                                            userPasswordController.text)
+                                    errorText: regProvider.isEditingPassword
+                                        ? regProvider.svalidatePassword(
+                                            regProvider.password.text)
                                         : " ",
                                     errorstyle:
                                         TextStyle(color: Colors.black54),
@@ -226,15 +181,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     icon: Icon(LineIcons.key),
                                     margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
                                     text: "Confirm Password",
-                                    control: userConfirmPasswordController,
+                                    control: regProvider.confirmPassword,
                                     onChanged: (value) {
-                                      setState(() {
-                                        _isEditingpassword = true;
-                                      });
+                                      regProvider.editsPassword();
                                     },
-                                    errorText: _isEditingpassword
-                                        ? _checkRepeatedPassword(
-                                            userConfirmPasswordController.text)
+                                    errorText: regProvider.isEditingPassword
+                                        ? regProvider.checkRepeatedPassword(
+                                            regProvider.confirmPassword.text)
                                         : " ",
                                     errorstyle:
                                         TextStyle(color: Colors.black54),
@@ -243,27 +196,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             //==================================================
                             //location
                             RoundTextField(
-                              text: (!widget.cityName
-                                      .toString()
-                                      .contains(new RegExp(r'[a-zA-Z]')))
-                                  ? "Location"
-                                  : "${widget.cityName.toString()}",
                               autofocus: false,
-                              control: userLocationController,
+                              control: regProvider.location,
                               preicon: Icon(LineIcons.mapMarker),
                             ),
 
-                            /*RoundTextField(
-                              text: (!widget.province.toString().contains(
-                                  new RegExp(r'[a-zA-Z]')))
-
-                                  ? "Province"
-                                  : "${widget.province.toString()}",
-                              autofocus: false,
-                              control: userProvinceController,
-                              preicon: Icon(LineIcons.mapPin),
-                            ),
-                             */
                             FormField<String>(
                               builder: (FormFieldState<String> state) {
                                 return InputDecorator(
@@ -275,20 +212,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(5.0))),
-                                  isEmpty: dropdownvalue == ' ',
+                                  isEmpty: regProvider.dropdownvalue == ' ',
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton<String>(
                                       key: Key('dropdown'),
-                                      value: dropdownvalue,
+                                      value: regProvider.dropdownvalue,
                                       isDense: true,
                                       onChanged: (newValue) {
-                                        setState(() {
-                                          dropdownvalue = newValue.toString();
-                                          province = dropdownvalue;
-                                          state.didChange(newValue);
-                                        });
+                                        regProvider.dropdownvalue =
+                                            newValue.toString();
+                                        province = regProvider.dropdownvalue;
+                                        state.didChange(newValue);
                                       },
-                                      items: dropDownItems.map((String value) {
+                                      items: regProvider.dropDownItems
+                                          .map((String value) {
                                         return DropdownMenuItem<String>(
                                           value: value,
                                           child: Text(value),
@@ -303,259 +240,146 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             //=============================================
                             //login button
                             RoundButton(
-                              text: "SIGNUP",
-                              press: () async {
-                                userProvinceController.text = province;
-                                //userLocationController.text=widget.cityName.toString();
-                                if (userEmailController.text == "" ||
-                                    userBirthdayController.text == "" ||
-                                    userConfirmPasswordController.text == "" ||
-                                    userFirstNameController.text == "" ||
-                                    userLastNameController.text == ""
-                                    //|| userLocationController.text == ""
-                                    ||
-                                    dropdownvalue == " " ||
-                                    userPasswordController.text == "" ||
-                                    userProvinceController.text == " ") {
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(32.0))),
-                                          contentPadding:
-                                              EdgeInsets.only(top: 10.0),
-                                          content: Container(
-                                            width: 370.0,
-                                            // height: 30,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.stretch,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: <Widget>[
-                                                SizedBox(
-                                                  height: 3,
-                                                ),
-                                                Text(
-                                                  "Please fill in all the fields.",
-                                                  style:
-                                                      TextStyle(fontSize: 24.0),
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
-                                                TextButton(
-                                                  child: Text('OK',
-                                                      style: TextStyle(
-                                                          color: Colors.black)),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      });
-                                } else {
-                                  await registerWithEmailPassword(
-                                          userEmailController.text,
-                                          userPasswordController.text)
-                                      .then((result) {
-                                    if (result != null) {
-                                      setState(() {
-                                        if (userLocationController.text == "") {
-                                          location = widget.cityName.toString();
-                                          FirebaseFirestore.instance
-                                              .collection('Users')
-                                              .doc(uid)
-                                              .collection("info")
-                                              .doc(uid)
-                                              .set({
-                                            'bday': userBirthdayController.text,
-                                            'email': userEmailController.text,
-                                            'fname':
-                                                userFirstNameController.text,
-                                            'location': widget.cityName,
-                                            'lname':
-                                                userLastNameController.text,
-                                            'province': province
-                                          });
-                                          FirebaseFirestore.instance
-                                              .collection('users')
-                                              .doc(uid)
-                                              .set({
-                                            'uid': uid,
-                                            'bday': userBirthdayController.text,
-                                            'email': userEmailController.text,
-                                            'fname':
-                                                userFirstNameController.text,
-                                            'location': widget.cityName,
-                                            'lname':
-                                                userLastNameController.text,
-                                            'province': province,
-                                          });
-                                        } else {
-                                          location =
-                                              userLocationController.text;
-
-                                          FirebaseFirestore.instance
-                                              .collection('Users')
-                                              .doc(uid)
-                                              .collection("info")
-                                              .doc(uid)
-                                              .set({
-                                            'bday': userBirthdayController.text,
-                                            'email': userEmailController.text,
-                                            'fname':
-                                                userFirstNameController.text,
-                                            'location':
-                                                userLocationController.text,
-                                            'lname':
-                                                userLastNameController.text,
-                                            'province': province
-                                          });
-                                          FirebaseFirestore.instance
-                                              .collection('users')
-                                              .doc(uid)
-                                              .set({
-                                            'uid': uid,
-                                            'bday': userBirthdayController.text,
-                                            'email': userEmailController.text,
-                                            'fname':
-                                                userFirstNameController.text,
-                                            'location': widget.cityName,
-                                            'lname':
-                                                userLastNameController.text,
-                                            'province': province,
-                                          });
-                                        }
-                                        //loginStatus =
-                                        //'You have registered successfully';
-                                        //loginStringColor = Colors.green;
-                                        /*Navigator.push(
-                                            context,
-                                            new MaterialPageRoute(
-                                                builder: (context) =>
-                                                    VerifyScreen(
-                                                        userEmailController
-                                                            .text,
-                                                        widget.cityName,
-                                                        userBirthdayController
-                                                            .text,
-                                                        userFirstNameController
-                                                            .text,
-                                                        userLastNameController
-                                                            .text)));*/
-                                        print('before pushing to homepage');
-                                        locator<NavigationService>()
-                                            .globalNavigateTo(
-                                                HomeRoute, context);
-                                      });
-                                    } else {
-                                      showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              32.0))),
-                                              contentPadding:
-                                                  EdgeInsets.only(top: 10.0),
-                                              content: Container(
-                                                width: 370.0,
-                                                // height: 30,
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment
-                                                          .stretch,
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: <Widget>[
-                                                    SizedBox(
-                                                      height: 3,
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: <Widget>[
-                                                        Text(
-                                                          "Error has occured !",
-                                                          style: TextStyle(
-                                                              fontSize: 24.0),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: <Widget>[
-                                                        Text(
-                                                          "This account already exist/There's something wrong",
-                                                          style: TextStyle(
-                                                              fontSize: 15.0,
-                                                              color:
-                                                                  Colors.red),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    SizedBox(
-                                                      height: 15,
-                                                    ),
-                                                    TextButton(
-                                                      child: Text('OK',
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .black)),
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
+                                text: "SIGNUP",
+                                press: () async {
+                                  regProvider.province.text =
+                                      regProvider.Province;
+                                  if (regProvider.email.text == "" ||
+                                      regProvider.birthday.text == "" ||
+                                      regProvider.confirmPassword.text == "" ||
+                                      regProvider.name.text == "" ||
+                                      regProvider.surname.text == "" ||
+                                      regProvider.dropdownvalue == " " ||
+                                      regProvider.password.text == "" ||
+                                      regProvider.province.text == " ") {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(32.0))),
+                                            contentPadding:
+                                                EdgeInsets.only(top: 10.0),
+                                            content: Container(
+                                              width: 370.0,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.stretch,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  SizedBox(
+                                                    height: 3,
+                                                  ),
+                                                  Text(
+                                                    "Please fill in all the fields.",
+                                                    style: TextStyle(
+                                                        fontSize: 24.0),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 15,
+                                                  ),
+                                                  TextButton(
+                                                    child: Text('OK',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.black)),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                ],
                                               ),
-                                            );
-                                          });
-                                    }
-                                  }).catchError((error) {
-                                    print('Sign in Error: $error');
-                                    setState(() {
-                                      loginStatus =
-                                          'Error occured while Signing in';
-                                      locator<NavigationService>()
-                                          .globalNavigateTo(
-                                              LoginRoute, context);
-                                      //loginStringColor = Colors.black54;
-                                    });
-                                  });
-                                }
-                              },
-                            ),
+                                            ),
+                                          );
+                                        });
+                                  } else if (!await regProvider
+                                      .registerWithEmailPassword()) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(32.0))),
+                                            contentPadding:
+                                                EdgeInsets.only(top: 10.0),
+                                            content: Container(
+                                              width: 370.0,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.stretch,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  SizedBox(
+                                                    height: 3,
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: <Widget>[
+                                                      Text(
+                                                        "Error has occured !",
+                                                        style: TextStyle(
+                                                            fontSize: 24.0),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: <Widget>[
+                                                      Text(
+                                                        "This account already exist/There's something wrong",
+                                                        style: TextStyle(
+                                                            fontSize: 15.0,
+                                                            color: Colors.red),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 15,
+                                                  ),
+                                                  TextButton(
+                                                    child: Text('OK',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.black)),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        });
+                                    regProvider.clearController();
+                                    locator<NavigationService>()
+                                        .globalNavigateTo(HomeRoute, context);
+                                  }
+                                }),
                             //=================================================================
                             //or dividers
                             OrDivider(),
                             //==========================================
                             //Google sign in button
-                            GoogleRoundButton(
-                                location: widget.cityName.toString(),
-                                province: province),
+                            GoogleRoundButton(),
                             //=============================================
                             // Already registered button => take user to login page
                             TextLink(
@@ -567,78 +391,5 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     })
                           ])))
             ])));
-  }
-
-  @override
-  void initState() {
-    userEmailController = TextEditingController();
-    userEmailController.text = '';
-
-    userPasswordController = TextEditingController();
-    userPasswordController.text = '';
-
-    userConfirmPasswordController = TextEditingController();
-    userFirstNameController = TextEditingController();
-    userLastNameController = TextEditingController();
-    userBirthdayController = TextEditingController();
-    userLocationController = TextEditingController();
-    userProvinceController = TextEditingController();
-
-    super.initState();
-  }
-
-  String? _checkRepeatedPassword(String value) {
-    value = value.trim();
-//check that passwords are matching.
-    if (userConfirmPasswordController.text.isNotEmpty) {
-      if (userConfirmPasswordController.text != userPasswordController.text) {
-        return 'Passwords do not match';
-      } else {
-        return 'Password Confirmed';
-      }
-    }
-    return null;
-  }
-
-  String? _validateEmail(String value) {
-    value = value.trim();
-//check user is enetring a valid email.
-    if (userEmailController.text.isNotEmpty) {
-      if (value.isEmpty) {
-        return 'Email can\'t be empty';
-      } else if (!value.contains(RegExp(
-          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+"))) {
-        return 'Enter a correct email address';
-      }
-    }
-
-    return null;
-  }
-
-  String? _validatePassword(String value) {
-    value = value.trim();
-//check user enters a strong enough password.
-    if (userPasswordController.text.isNotEmpty) {
-      if (value.isEmpty) {
-        return 'Please enter password';
-      } else {
-        if (!value.contains(new RegExp(r'[0-9]'))) {
-          return ' Password must contain atleast one digit ';
-        }
-
-        if (!value.contains(new RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-          return 'Password must contain at least on special character';
-        }
-        if (!value.contains(new RegExp(r'[a-z]'))) {
-          return 'Password must contain at least one lower case letter';
-        }
-
-        if (!value.contains(new RegExp(r'[A-Z]'))) {
-          return 'Password must contain at least one upper case letter';
-        }
-      }
-    }
-
-    return null;
   }
 }

@@ -10,3 +10,8 @@ FirebaseFirestore firebaseFiretore = FirebaseFirestore.instance;
 FirebaseAuth auth = FirebaseAuth.instance;
 GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
 GoogleSignIn googleSignIn = GoogleSignIn();
+final CollectionReference wishlistRef = FirebaseFirestore.instance
+    .collection('Users')
+    .doc(FirebaseAuth.instance.currentUser!.uid)
+    .collection("Wishlist");
+String? uid;

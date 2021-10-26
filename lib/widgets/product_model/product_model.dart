@@ -40,6 +40,7 @@ class _ProductCard extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
     int amount = widget.stockamt;
+    WishlistServices wishlistServices = WishlistServices();
     return Padding(
       padding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
       child: Container(
@@ -135,7 +136,7 @@ class _ProductCard extends State<ProductCard> {
                           toggle = !toggle;
                         });
                         if (toggle) {
-                          Wishlist.addToCart(
+                          wishlistServices.addToCart(
                               widget.id,
                               widget.imgUrl,
                               widget.description,
@@ -152,7 +153,7 @@ class _ProductCard extends State<ProductCard> {
                               widget.stockamt,
                               widget.category);
                         } else
-                          Wishlist.removeFromCart(
+                          wishlistServices.removeFromCart(
                               widget.id,
                               widget.imgUrl,
                               widget.description,

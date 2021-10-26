@@ -5,10 +5,14 @@ import 'package:aishop/utils/cart.dart';
 import 'package:aishop/utils/wishlist.dart';
 import 'package:flutter/material.dart';
 
+// class ModalProvider with ChangeNotifier{
+
+// }
 Modal(context, id, imgUrl, name, description, price, stockamt, category) {
   int amount = stockamt;
   bool toggle = false;
   bool add = false;
+  WishlistServices wishlistServices = WishlistServices();
   return showDialog(
       context: context,
       builder: (context) {
@@ -82,13 +86,13 @@ Modal(context, id, imgUrl, name, description, price, stockamt, category) {
                               toggle = !toggle;
                             });
                             if (toggle) {
-                              Wishlist.addToCart(id, imgUrl, description, name,
-                                  price, stockamt, category);
+                              wishlistServices.addToCart(id, imgUrl, description, name, price,
+                                  stockamt, category);
 
                               HistoryTracker.addToHistory(id, imgUrl,
                                   description, name, price, stockamt, category);
                             } else {
-                              Wishlist.removeFromCart(id, imgUrl, description,
+                              wishlistServices.removeFromCart(id, imgUrl, description,
                                   name, price, stockamt, category);
                             }
                           },
@@ -104,14 +108,34 @@ Modal(context, id, imgUrl, name, description, price, stockamt, category) {
                                   });
                                   double quantity = 1;
                                   if (add) {
-                                    Cart.addToCart(id, imgUrl, name,
-                                        description, price, quantity, stockamt, category);
+                                    Cart.addToCart(
+                                        id,
+                                        imgUrl,
+                                        name,
+                                        description,
+                                        price,
+                                        quantity,
+                                        stockamt,
+                                        category);
 
-                                    HistoryTracker.addToHistory(id, imgUrl,
-                                        name, description, price, stockamt, category);
+                                    HistoryTracker.addToHistory(
+                                        id,
+                                        imgUrl,
+                                        name,
+                                        description,
+                                        price,
+                                        stockamt,
+                                        category);
                                   } else {
-                                    Cart.removeFromCart(id, imgUrl, name,
-                                        description, price, quantity, stockamt, category);
+                                    Cart.removeFromCart(
+                                        id,
+                                        imgUrl,
+                                        name,
+                                        description,
+                                        price,
+                                        quantity,
+                                        stockamt,
+                                        category);
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(

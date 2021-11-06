@@ -251,6 +251,7 @@ class CheckOutPayment extends StatelessWidget {
                                               onPressed: () {
                                                 addToPurchases();
                                                 addToOrders();
+                                                addToOrdersAdmin();
                                                 Navigator.of(context).push(
                                                     MaterialPageRoute(
                                                         builder: (BuildContext

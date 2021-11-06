@@ -5,6 +5,7 @@ import 'package:aishop/screens/cart/components/order_review.dart';
 import 'package:aishop/screens/invoices/invoices.dart';
 import 'package:aishop/screens/login/loginscreen.dart';
 import 'package:aishop/screens/past_purchases/pastpurchase.dart';
+import 'package:aishop/screens/past_purchases/theorders.dart';
 import 'package:aishop/screens/profile_page/edit_profile.dart';
 import 'package:aishop/screens/search/search.dart';
 import 'package:aishop/screens/settings/settings.dart';
@@ -42,7 +43,7 @@ class _HomePageState extends State<HomePage> {
             new MaterialPageRoute(builder: (context) => SettingsPage()));
       } else if (choice == Constants.orders) {
         Navigator.push(context,
-            new MaterialPageRoute(builder: (context) => PastPurchase()));
+            new MaterialPageRoute(builder: (context) => OrdersPage()));
       } else if (choice == Constants.invoices) {
         Navigator.push(context,
             new MaterialPageRoute(builder: (context) => InvoicesPage()));

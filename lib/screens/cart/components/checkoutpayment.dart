@@ -2,7 +2,7 @@
 import 'package:aishop/screens/cart/components/order_review.dart';
 import 'package:aishop/screens/delivery/checkoutdelivery.dart';
 import 'package:aishop/screens/homepage/homepage.dart';
-import 'package:aishop/screens/past_purchases/pastpurchase.dart';
+import 'package:aishop/screens/past_purchases/theorders.dart';
 import 'package:aishop/services/historytracker.dart';
 import 'package:aishop/services/orders.dart';
 import 'package:aishop/styles/textlink.dart';
@@ -65,7 +65,7 @@ class CheckOutPayment extends StatelessWidget {
                                 press: () => {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (BuildContext context) =>
-                                          PastPurchase()))
+                                          OrdersPage()))
                                 },
                               ),
                             ),
@@ -250,7 +250,7 @@ class CheckOutPayment extends StatelessWidget {
                                               ),
                                               onPressed: () {
                                                 addToPurchases();
-                                                addToOrders();
+                                                addToOrders(cartTotal+n);
                                                 Navigator.of(context).push(
                                                     MaterialPageRoute(
                                                         builder: (BuildContext

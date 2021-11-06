@@ -76,6 +76,7 @@ class Order extends StatelessWidget with ChangeNotifier {
                         },
                       ));
                 },
+                itemCount: snapshot.data!.docs.length,
               );
             }
           },

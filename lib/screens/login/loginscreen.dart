@@ -15,7 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'dart:async';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -242,19 +241,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                 align: Alignment.center,
                                 press: () => {
                                       print(authProvider.cityname),
-                                      Timer(Duration(seconds: 2), () {
-                                        Navigator.push(
-                                            context,
-                                            new MaterialPageRoute(
-                                                builder: (context) =>
-                                                    RegisterScreen(
-                                                      cityName: authProvider
-                                                          .cityname
-                                                          .toString(),
-                                                      /*longitude: longitude,
+                                      Navigator.push(
+                                          context,
+                                          new MaterialPageRoute(
+                                              builder: (context) =>
+                                                  RegisterScreen(
+                                                    cityName: authProvider
+                                                        .cityname
+                                                        .toString(),
+                                                    /*longitude: longitude,
                                                   latitude: latitude,*/
-                                                    )));
-                                      })
+                                                  )))
                                     })
 
                             //=====================================================

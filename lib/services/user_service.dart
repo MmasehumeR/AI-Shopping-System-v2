@@ -2,7 +2,8 @@ import 'package:aishop/models/user.dart';
 import 'package:aishop/utils/costants.dart';
 
 class UserServices {
-  String usersCollection = "TestUsers";
+  String usersCollection = "Users";
+  String adminsCollection = "users";
 
   void createUser({
     required String id,
@@ -19,6 +20,15 @@ class UserServices {
         .collection("info")
         .doc(id)
         .set({
+      "fname": name,
+      'lname': surname,
+      'bday': birthday,
+      "email": email,
+      'location': location,
+      'province': province,
+    });
+    firebaseFiretore.collection(adminsCollection).doc(id).set({
+      'uid': id,
       "fname": name,
       'lname': surname,
       'bday': birthday,

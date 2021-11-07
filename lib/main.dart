@@ -2,15 +2,22 @@ import 'dart:ui';
 
 import 'package:aishop/navigation/locator.dart';
 import 'package:aishop/navigation/routing/router.dart';
+import 'package:aishop/providers/auth_provider.dart';
 import 'package:aishop/screens/homepage/homepage.dart';
 import 'package:aishop/screens/login/loginscreen.dart';
 import 'package:aishop/services/databasemanager.dart';
 import 'package:aishop/utils/authentication.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   setupLocator();
-  runApp(MyApp());
+  runApp(MultiProvider(providers: [
+    // ChangeNotifierProvider.value(value: AppProvider.init()),
+    ChangeNotifierProvider.value(value: AuthProvider.initialize()),
+    // ChangeNotifierProvider.value(value: ProfileProvider.init()),
+    // ChangeNotifierProvider.value(value: ProductsProvider.init()),
+  ], child: MyApp()));
 }
 
 class MyApp extends StatefulWidget {

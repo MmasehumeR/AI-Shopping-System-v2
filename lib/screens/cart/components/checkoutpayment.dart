@@ -1,9 +1,12 @@
 // ignore: must_be_immutable
+import 'package:aishop/navigation/locator.dart';
+import 'package:aishop/navigation/routing/route_names.dart';
 import 'package:aishop/screens/cart/components/order_review.dart';
 import 'package:aishop/screens/delivery/checkoutdelivery.dart';
 import 'package:aishop/screens/homepage/homepage.dart';
 import 'package:aishop/screens/past_purchases/theorders.dart';
 import 'package:aishop/services/historytracker.dart';
+import 'package:aishop/services/navigation_service.dart';
 import 'package:aishop/services/orders.dart';
 import 'package:aishop/styles/textlink.dart';
 import 'package:aishop/styles/theme.dart';
@@ -66,6 +69,7 @@ class CheckOutPayment extends StatelessWidget {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (BuildContext context) =>
                                           OrdersPage()))
+
                                 },
                               ),
                             ),
@@ -256,6 +260,7 @@ class CheckOutPayment extends StatelessWidget {
                                                         builder: (BuildContext
                                                                 context) =>
                                                             HomePage()));
+
                                               },
                                             ),
                                             TextButton(

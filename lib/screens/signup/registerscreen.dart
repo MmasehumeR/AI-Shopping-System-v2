@@ -148,52 +148,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                               EdgeInsets.fromLTRB(10, 0, 0, 0),
                                           control: userBirthdayController,
                                           text: "Birthday",
-                                          tap: () => {
-                                                FocusScope.of(context)
-                                                    .unfocus(),
-                                                showDatePicker(
-                                                    context: context,
-                                                    initialDate: DateTime.now(),
-                                                    firstDate: DateTime(
-                                                        DateTime.now().year -
-                                                            100,
-                                                        01),
-                                                    lastDate: DateTime.now(),
-                                                    builder:
-                                                        (BuildContext context,
-                                                            picker) {
-                                                      return Theme(
-                                                          // change colors
-                                                          data: ThemeData.dark()
-                                                              .copyWith(
-                                                            colorScheme:
-                                                                ColorScheme
-                                                                    .dark(
-                                                              primary:
-                                                                  lightgrey, //highlighter
-                                                              onPrimary:
-                                                                  black, //text highlighted
-                                                              surface:
-                                                                  mediumblack,
-                                                              onSurface: white,
-                                                            ),
-                                                            dialogBackgroundColor:
-                                                                lightblack,
-                                                          ),
-                                                          child: (picker)!);
-                                                    }).then((pickedDate) {
-                                                  if (pickedDate != null) {
-                                                    String formattedDate =
-                                                        DateFormat('yyyy-MM-dd')
-                                                            .format(pickedDate);
-                                                    userBirthdayController
-                                                        .text = formattedDate;
-                                                  }
-                                                })
-                                              }))
-                                ]
-                                //====================================================================================rowEnded
-                                ),
+                                          tap: () => { FocusScope.of(context) .unfocus(), showDatePicker( context: context, initialDate: DateTime.now(), firstDate: DateTime( DateTime.now().year - 100, 01), lastDate: DateTime.now(), builder: (BuildContext context, picker) { return Theme( data: ThemeData.dark() .copyWith( colorScheme: ColorScheme .dark( primary: lightgrey,  onPrimary: black,  surface: mediumblack, onSurface: white, ), dialogBackgroundColor: lightblack, ), child: (picker)!); }).then((pickedDate) { if (pickedDate != null) { String formattedDate = DateFormat('yyyy-MM-dd') .format(pickedDate); userBirthdayController .text = formattedDate; } }) })) ] ),
                             Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -280,11 +235,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       key: Key('dropdown'),
                                       value: dropdownvalue,
                                       isDense: true,
-                                      onChanged: (newValue) {
-                                        setState(() {
-                                          dropdownvalue = newValue.toString();
-                                          province = dropdownvalue;
-                                          state.didChange(newValue);
+                                      onChanged: (newValue) {setState(() {dropdownvalue = newValue.toString();province = dropdownvalue;state.didChange(newValue);
                                         });
                                       },
                                       items: dropDownItems.map((String value) {
@@ -306,16 +257,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               press: () async {
                                 userProvinceController.text = province;
                                 //userLocationController.text=widget.cityName.toString();
-                                if (userEmailController.text == "" ||
-                                    userBirthdayController.text == "" ||
-                                    userConfirmPasswordController.text == "" ||
-                                    userFirstNameController.text == "" ||
-                                    userLastNameController.text == ""
-                                    //|| userLocationController.text == ""
-                                    ||
-                                    dropdownvalue == " " ||
-                                    userPasswordController.text == "" ||
-                                    userProvinceController.text == " ") {
+                                if (userEmailController.text == "" || userBirthdayController.text == "" || userConfirmPasswordController.text == "" || userFirstNameController.text == "" || userLastNameController.text == ""|| dropdownvalue == " " || userPasswordController.text == "" || userProvinceController.text == " ") {
                                   showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
@@ -350,229 +292,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                   child: Text('OK',
                                                       style: TextStyle(
                                                           color: Colors.black)),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      });
-                                } else {
-                                  await registerWithEmailPassword(
-                                          userEmailController.text,
-                                          userPasswordController.text)
-                                      .then((result) {
-                                    if (result != null) {
-                                      setState(() async {
-                                        if (userLocationController.text == "") {
-                                          location = widget.cityName.toString();
-                                          FirebaseFirestore.instance
-                                              .collection('Users')
-                                              .doc(uid)
-                                              .collection("info")
-                                              .doc(uid)
-                                              .set({
-                                            'bday': userBirthdayController.text,
-                                            'email': userEmailController.text,
-                                            'fname':
-                                                userFirstNameController.text,
-                                            'location': widget.cityName,
-                                            'lname':
-                                                userLastNameController.text,
-                                            'province': province
-                                          });
-                                          await FirebaseFirestore.instance.collection("Users")
-                                              .doc(uid).set({
-                                            "account": 5000000,
-                                            "default delivery" : "Standard Delivery",
-                                            "delivery index": 0,
-                                            "delivery cost" : 70,
-                                            "total" : 0,
-                                            "use Address": location,
-                                            "invoices" : 0,
-                                            "invoices total" : 0
-                                          });
-                                          FirebaseFirestore.instance
-                                              .collection('users')
-                                              .doc(uid)
-                                              .set({
-                                            'uid': uid,
-                                            'bday': userBirthdayController.text,
-                                            'email': userEmailController.text,
-                                            'fname':
-                                                userFirstNameController.text,
-                                            'location': widget.cityName,
-                                            'lname':
-                                                userLastNameController.text,
-                                            'province': province,
-                                          });
-                                        } else {
-                                          location =
-                                              userLocationController.text;
-
-                                          FirebaseFirestore.instance
-                                              .collection('Users')
-                                              .doc(uid)
-                                              .collection("info")
-                                              .doc(uid)
-                                              .set({
-                                            'bday': userBirthdayController.text,
-                                            'email': userEmailController.text,
-                                            'fname':
-                                                userFirstNameController.text,
-                                            'location':
-                                                userLocationController.text,
-                                            'lname':
-                                                userLastNameController.text,
-                                            'province': province
-                                          });
-                                          await FirebaseFirestore.instance.collection("Users")
-                                              .doc(uid).set({
-                                            "account": 5000000,
-                                            "default delivery" : "Standard Delivery",
-                                            "delivery index": 0,
-                                            "delivery cost" : 70,
-                                            "total" : 0,
-                                            "use Address": location,
-                                            "invoices" : 0,
-                                            "invoices total" : 0
-                                          });
-                                          FirebaseFirestore.instance
-                                              .collection('users')
-                                              .doc(uid)
-                                              .set({
-                                            'uid': uid,
-                                            'bday': userBirthdayController.text,
-                                            'email': userEmailController.text,
-                                            'fname':
-                                                userFirstNameController.text,
-                                            'location': widget.cityName,
-                                            'lname':
-                                                userLastNameController.text,
-                                            'province': province,
-                                          });
-                                        }
-                                        //loginStatus =
-                                        //'You have registered successfully';
-                                        //loginStringColor = Colors.green;
-                                        /*Navigator.push(
-                                            context,
-                                            new MaterialPageRoute(
-                                                builder: (context) =>
-                                                    VerifyScreen(
-                                                        userEmailController
-                                                            .text,
-                                                        widget.cityName,
-                                                        userBirthdayController
-                                                            .text,
-                                                        userFirstNameController
-                                                            .text,
-                                                        userLastNameController
-                                                            .text)));*/
-                                        print('before pushing to homepage');
-                                        Navigator.push(
-                                            context,
-                                            new MaterialPageRoute(
-                                                builder: (context) =>
-                                                    HomePage()));
-                                      });
-                                    } else {
-                                      showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              32.0))),
-                                              contentPadding:
-                                                  EdgeInsets.only(top: 10.0),
-                                              content: Container(
-                                                width: 370.0,
-                                                // height: 30,
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment
-                                                          .stretch,
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: <Widget>[
-                                                    SizedBox(
-                                                      height: 3,
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: <Widget>[
-                                                        Text(
-                                                          "Error has occured !",
-                                                          style: TextStyle(
-                                                              fontSize: 24.0),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: <Widget>[
-                                                        Text(
-                                                          "This account already exist/There's something wrong",
-                                                          style: TextStyle(
-                                                              fontSize: 15.0,
-                                                              color:
-                                                                  Colors.red),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    SizedBox(
-                                                      height: 15,
-                                                    ),
-                                                    TextButton(
-                                                      child: Text('OK',
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .black)),
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            );
-                                          });
-                                    }
-                                  }).catchError((error) {
-                                    print('Sign in Error: $error');
-                                    setState(() {
-                                      loginStatus =
-                                          'Error occured while Signing in';
-                                      Navigator.push(
-                                          context,
-                                          new MaterialPageRoute(
-                                              builder: (context) =>
-                                                  LoginScreen()));
-                                      //loginStringColor = Colors.black54;
-                                    });
-                                  });
-                                }
-                              },
-                            ),
+    onPressed: () { Navigator.of(context).pop(); }, ), ], ), ), ); }); } else { await registerWithEmailPassword( userEmailController.text, userPasswordController.text) .then((result) { if (result != null) { setState(() async { if (userLocationController.text == "") { location = widget.cityName.toString(); FirebaseFirestore.instance .collection('Users') .doc(uid) .collection("info") .doc(uid) .set({ 'bday': userBirthdayController.text, 'email': userEmailController.text, 'fname': userFirstNameController.text, 'location': widget.cityName, 'lname': userLastNameController.text, 'province': province }); await FirebaseFirestore.instance.collection("Users") .doc(uid).set({ "account": 5000000, "default delivery" : "Standard Delivery", "delivery index": 0, "delivery cost" : 70, "total" : 0, "use Address": location, "invoices" : 0, "invoices total" : 0 }); FirebaseFirestore.instance .collection('users') .doc(uid) .set({ 'uid': uid, 'bday': userBirthdayController.text, 'email': userEmailController.text, 'fname': userFirstNameController.text, 'location': widget.cityName, 'lname': userLastNameController.text, 'province': province, }); } else { location = userLocationController.text; FirebaseFirestore.instance .collection('Users') .doc(uid) .collection("info") .doc(uid) .set({ 'bday': userBirthdayController.text, 'email': userEmailController.text, 'fname': userFirstNameController.text, 'location': userLocationController.text, 'lname': userLastNameController.text, 'province': province }); await FirebaseFirestore.instance.collection("Users") .doc(uid).set({ "account": 5000000, "default delivery" : "Standard Delivery", "delivery index": 0, "delivery cost" : 70, "total" : 0, "use Address": location, "invoices" : 0, "invoices total" : 0 }); FirebaseFirestore.instance .collection('users') .doc(uid) .set({ 'uid': uid, 'bday': userBirthdayController.text, 'email': userEmailController.text, 'fname': userFirstNameController.text, 'location': widget.cityName, 'lname': userLastNameController.text, 'province': province, }); } print('before pushing to homepage'); Navigator.push( context, new MaterialPageRoute( builder: (context) => HomePage())); }); } else { showDialog( context: context, builder: (BuildContext context) { return AlertDialog( shape: RoundedRectangleBorder( borderRadius: BorderRadius.all( Radius.circular( 32.0))), contentPadding: EdgeInsets.only(top: 10.0), content: Container( width: 370.0, child: Column( mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment .stretch, mainAxisSize: MainAxisSize.min, children: <Widget>[ SizedBox( height: 3, ), Row( mainAxisAlignment: MainAxisAlignment .spaceEvenly, mainAxisSize: MainAxisSize.min, children: <Widget>[ Text( "Error has occured !", style: TextStyle( fontSize: 24.0), ), ], ), SizedBox( height: 10, ), Row( mainAxisAlignment: MainAxisAlignment .spaceEvenly, mainAxisSize: MainAxisSize.min, children: <Widget>[ Text( "This account already exist/There's something wrong", style: TextStyle( fontSize: 15.0, color: Colors.red), ), ], ), SizedBox( height: 15, ), TextButton( child: Text('OK', style: TextStyle( color: Colors .black)), onPressed: () { Navigator.of(context) .pop(); }, ), ], ), ), ); }); } }).catchError((error) { print('Sign in Error: $error'); setState(() { loginStatus = 'Error occured while Signing in'; Navigator.push( context, new MaterialPageRoute( builder: (context) => LoginScreen())); }); }); } }, ),
                             //=================================================================
                             //or dividers
                             OrDivider(),
@@ -586,12 +306,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             TextLink(
                                 align: Alignment.center,
                                 text: 'Already have an account? Login here.',
-                                press: () => {
-                                      Navigator.push(
-                                          context,
-                                          new MaterialPageRoute(
-                                              builder: (context) =>
-                                                  LoginScreen()))
+                                press: () => { Navigator.push( context, new MaterialPageRoute( builder: (context) => LoginScreen()))
                                     })
                           ])))
             ])));
@@ -653,17 +368,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         if (!value.contains(new RegExp(r'[0-9]'))) {
           return ' Password must contain atleast one digit ';
         }
-
-        if (!value.contains(new RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-          return 'Password must contain at least on special character';
-        }
-        if (!value.contains(new RegExp(r'[a-z]'))) {
-          return 'Password must contain at least one lower case letter';
-        }
-
-        if (!value.contains(new RegExp(r'[A-Z]'))) {
-          return 'Password must contain at least one upper case letter';
-        }
+        if (!value.contains(new RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) { return 'Password must contain at least on special character'; } if (!value.contains(new RegExp(r'[a-z]'))) { return 'Password must contain at least one lower case letter'; } if (!value.contains(new RegExp(r'[A-Z]'))) { return 'Password must contain at least one upper case letter'; }
       }
     }
 

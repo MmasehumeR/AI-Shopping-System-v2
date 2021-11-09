@@ -93,14 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
     print("running location data function");
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.bestForNavigation);
-    print("done with Geolocator+${position.longitude}");
-    longitude = await position.longitude.toString();
-    latitude = await position.latitude.toString();
-    NetworkHelper networkHelper = await NetworkHelper(
-        'http://api.positionstack.com/v1/reverse?access_key=5e65a2bf717cff420bade43bf75f0cec&query=$latitude,$longitude');
-    await networkHelper.getData();
-    cityname = networkHelper.cityname;
-    Province=networkHelper.Province;
+    print("done with Geolocator+${position.longitude}"); longitude = await position.longitude.toString(); latitude = await position.latitude.toString(); NetworkHelper networkHelper = await NetworkHelper( 'http://api.positionstack.com/v1/reverse?access_key=5e65a2bf717cff420bade43bf75f0cec&query=$latitude,$longitude'); await networkHelper.getData(); cityname = networkHelper.cityname; Province=networkHelper.Province;
   }
 
 //test keys
@@ -179,145 +172,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                         userPasswordController.text)
                                     .then((result) {
                                   if (result != null) {
-                                    setState(() {
-                                      Navigator.push(
-                                          context,
-                                          new MaterialPageRoute(
-                                              builder: (context) =>
-                                                  HomePage()));
-                                    });
-                                  } else {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(32.0))),
-                                            contentPadding:
-                                                EdgeInsets.only(top: 10.0),
-                                            content: Container(
-                                              width: 300.0,
-                                              // height: 30,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.stretch,
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: <Widget>[
-                                                  SizedBox(
-                                                    height: 3,
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        "Error has occured",
-                                                        style: TextStyle(
-                                                            fontSize: 24.0),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 8,
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        "Your Password/Email is incorrect",
-                                                        style: TextStyle(
-                                                            fontSize: 13.0,
-                                                            color: Colors.red),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  TextButton(
-                                                    child: Text('OK',
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.black)),
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        });
-                                  }
+    setState(() { Navigator.push( context, new MaterialPageRoute( builder: (context) => HomePage())); }); } else { showDialog( context: context, builder: (BuildContext context) { return AlertDialog( shape: RoundedRectangleBorder( borderRadius: BorderRadius.all( Radius.circular(32.0))), contentPadding: EdgeInsets.only(top: 10.0), content: Container( width: 300.0, child: Column( mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisSize: MainAxisSize.min, children: <Widget>[ SizedBox( height: 3, ), Row( mainAxisAlignment: MainAxisAlignment .spaceEvenly, mainAxisSize: MainAxisSize.min, children: <Widget>[ Text( "Error has occured", style: TextStyle( fontSize: 24.0), ), ], ), SizedBox( height: 8, ), Row( mainAxisAlignment: MainAxisAlignment .spaceEvenly, mainAxisSize: MainAxisSize.min, children: <Widget>[ Text( "Your Password/Email is incorrect", style: TextStyle( fontSize: 13.0, color: Colors.red), ), ], ), SizedBox( height: 10, ), TextButton( child: Text('OK', style: TextStyle( color: Colors.black)), onPressed: () { Navigator.of(context) .pop(); }, ), ], ), ), ); }); }
                                 }).catchError((error) {
-                                  print('Sign in Error: $error');
-                                  setState(() {
-                                    Navigator.push(
-                                        context,
-                                        new MaterialPageRoute(
-                                            builder: (context) =>
-                                                LoginScreen()));
-                                  });
-                                });
-                              },
-                            ),
-                            //=============================================
-                            TextLink(
-                                text: "Forgot Password?",
-                                align: Alignment.centerRight,
-                                press: () => {
-                                      Alert(
-                                          context: context,
-                                          title:
-                                              "Enter email for password reset",
-                                          content: Column(
-                                            children: <Widget>[
-                                              TextField(
-                                                decoration: InputDecoration(
-                                                  icon: Icon(LineIcons.user),
-                                                  labelText: 'E-mail',
-                                                ),
-                                                controller: userForgotP,
-                                              ),
-                                            ],
-                                          ),
-                                          buttons: [
-                                            DialogButton(
-                                              onPressed: () {
-                                                resetPassword(userForgotP.text);
-
-                                                Navigator.pop(context);
-                                              },
-                                              child: Text(
-                                                "Send email",
-                                                style: TextStyle(
-                                                    color: white, fontSize: 20),
-                                              ),
-                                              color: lightblack,
-                                            ),
-                                            DialogButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context),
-                                              child: Text(
-                                                "Cancel",
-                                                style: TextStyle(
-                                                    color: white, fontSize: 20),
-                                              ),
-                                              color: lightblack,
-                                            )
-                                          ]).show(),
-                                    }),
+                                  print('Sign in Error: $error'); setState(() { Navigator.push( context, new MaterialPageRoute( builder: (context) => LoginScreen())); }); }); }, ), TextLink( text: "Forgot Password?", align: Alignment.centerRight, press: () => { Alert( context: context, title: "Enter email for password reset", content: Column( children: <Widget>[ TextField( decoration: InputDecoration( icon: Icon(LineIcons.user), labelText: 'E-mail', ), controller: userForgotP, ), ], ), buttons: [ DialogButton( onPressed: () { resetPassword(userForgotP.text); Navigator.pop(context); }, child: Text( "Send email", style: TextStyle( color: white, fontSize: 20), ), color: lightblack, ), DialogButton( onPressed: () => Navigator.pop(context), child: Text( "Cancel", style: TextStyle( color: white, fontSize: 20), ), color: lightblack, ) ]).show(), }),
                             //=========================================
                             //or dividers
                             OrDivider(),

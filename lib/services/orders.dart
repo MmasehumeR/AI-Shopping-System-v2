@@ -61,3 +61,44 @@ Future<void> addToOrders() async {
 
   await ref.update({"account" : FieldValue.increment(-invoicetotal), "total" : 0, "invoices": FieldValue.increment(1), "invoices total" : FieldValue.increment(invoicetotal)});
 }
+
+void addToOrdersAdmin() async{
+  DateTime now = new DateTime.now();
+  DateTime date =
+  new DateTime(now.year, now.month, now.day, now.hour, now.minute);
+
+  await FirebaseFirestore.instance
+      .collection('Users')
+      .doc(uid)
+      .collection('Cart')
+      .get()
+      .then((snapshots) => {
+    snapshots.docs.forEach((productid) {
+      FirebaseFirestore.instance
+          .collection('Torders')
+          .doc(uid)
+          .collection('Products')
+          .doc()
+          .set({
+        'uid' : uid,
+        'url': productid.get("url"),
+        'name': productid.get("name"),
+        'description': productid.get("description"),
+        'category': productid.get('category'),
+        'unit price': productid.get("price"),
+        'total': productid.get("total"),
+        'date': date,
+        'quantity': productid.get("quantity")
+      });
+    })
+  });
+
+  await FirebaseFirestore.instance
+      .collection('Torders')
+      .doc(uid)
+      .set({
+    'date': date,
+  });
+
+
+}

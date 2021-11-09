@@ -23,6 +23,7 @@ class PastPurchaseState extends State<PastPurchase> {
         appBar: MyAppBar(
           title: Text(
             "Order Products",
+
           ),
           context: context,
         ),
@@ -80,7 +81,9 @@ class PastPurchaseState extends State<PastPurchase> {
                                   ),
                                 ),
 
+
                                 SizedBox(
+
                                   height: 10,
                                 ),
                                 Container(
@@ -98,7 +101,9 @@ class PastPurchaseState extends State<PastPurchase> {
                                 ),
                                 Container(
                                   width: 500,
+
                                   child: Text("Unit Price: R"+
+
                                       snapshot.data!.docs[index]
                                           .get('unit price').toString(),
                                     maxLines: 2,
@@ -117,6 +122,7 @@ class PastPurchaseState extends State<PastPurchase> {
                                             snapshot.data!.docs[index]
                                                 .get('total')
                                                 .toString(),
+
                                         style: new TextStyle(
                                             color: lightblack,
                                             fontWeight: FontWeight.normal,
@@ -132,6 +138,7 @@ class PastPurchaseState extends State<PastPurchase> {
               );
             }),
         bottomNavigationBar: new Container(
+
           color: Color(0xD2242424),
           child: Row(
             children: <Widget>[

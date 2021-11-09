@@ -1,3 +1,4 @@
+
 import 'package:aishop/utils/authentication.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -5,9 +6,14 @@ import 'package:intl/intl.dart';
 void addToOrders(double orderprice) {
 
 
+
   DateTime now = new DateTime.now();
   DateTime date =
       new DateTime(now.year, now.month, now.day, now.hour, now.minute);
+  String? mine = date.toString();
+  String? tester = DateFormat('yyMMddhhmmssS').format(date).toString();
+  DocumentReference ref =
+      await FirebaseFirestore.instance.collection("Users").doc(uid);
 
   String? mine = date.toString();
   String? tester = DateFormat('yyMMddhhmmssS').format(date).toString();
@@ -21,10 +27,14 @@ void addToOrders(double orderprice) {
       .then((snapshots) => {
             snapshots.docs.forEach((productid) {
               FirebaseFirestore.instance
-                  .collection('Orders')
+                  .collection('TestOrders')
                   .doc(uid)
+                  .collection('Orders')
+                  .doc(mine)
+                  .collection('products')
+                  .doc(productid.id)
                   .set({
-                'uid' : uid,
+                'uid': uid,
                 'url': productid.get("url"),
                 'name': productid.get("name"),
                 'description': productid.get("description"),
@@ -69,3 +79,4 @@ void addToOrders(double orderprice) {
   });
 
 }
+

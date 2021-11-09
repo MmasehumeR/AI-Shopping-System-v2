@@ -1,27 +1,28 @@
 # AI SHOPPING SYSTEM V2
 Developed by : We don't byte
 
-[![Build Status](https://app.travis-ci.com/mmasehume/AI-Shopping-System-v2.svg?branch=dev)](https://app.travis-ci.com/mmasehume/AI-Shopping-System-v2)
-[![Coverage Status](https://coveralls.io/repos/github/mmasehume/AI-Shopping-System-Admin/badge.svg?branch=fake)](https://coveralls.io/github/mmasehume/AI-Shopping-System-Admin?branch=fake)
+[![Build Status](https://app.travis-ci.com/MmasehumeR/AI-Shopping-System-v2.svg?branch=dev)](https://app.travis-ci.com/MmasehumeR/AI-Shopping-System-v2)
+[![Coverage Status](https://coveralls.io/repos/github/MmasehumeR/AI-Shopping-System-v2/badge.svg?branch=dev)](https://coveralls.io/github/MmasehumeR/AI-Shopping-System-v2?branch=dev)
 
 # AI SHOPPING SYSTEM
 
 A complete Flutter application written in dart with firebase implementation and trained machine learning models.
 
 
-## DESCRIPTION
+# DESCRIPTION 
 
 AI Shopping System(AISH) implemented by "We don't byte" group is an e-commerce Web Application that allows users to shop online. 
 shoppers may purchase different types of items from the comfort of their home or any other place without physically
 visiting those stores. It allows Users to buy items from multiple stores despite their location. Aish is an artificial intelligent
 app that will feed the customers eyes what they are most interested. It recommends products that the user might be interested in, using machine learning algorithms.
 
-## DOCUMENTATION
-[Documentation](https://docs.google.com/document/d/1fOcOD5PfAJeSOr_vy4FCrDGsdkLrttcEqX3IggBki58/edit?usp=sharing)
+# DOCUMENTATION 
+* [Requirements Analysis Document](https://docs.google.com/document/d/1fOcOD5PfAJeSOr_vy4FCrDGsdkLrttcEqX3IggBki58/edit?usp=sharing)
+* [UML Diagrams](https://docs.google.com/document/d/1fOcOD5PfAJeSOr_vy4FCrDGsdkLrttcEqX3IggBki58/edit?usp=sharing)
+* [Daily Scrum](https://third-safflower-7c4.notion.site/Software-Design-Project-Daily-Scrum-d467bcafe4ad453a9ed90791aa2e3ff7)
+* [Tiaga wiki](https://tree.taiga.io/project/waffles-ai-shopping-system-v2/wiki/home)
+* [Github wiki](https://github.com/mmasehume/AI-Shopping-System-v2/wiki)
 
-### Project Wiki's
-[Github wiki](https://github.com/mmasehume/AI-Shopping-System-v2/wiki) \
-[Tiaga wiki](https://tree.taiga.io/project/waffles-ai-shopping-system-v2/wiki/home)
 
 # FEATURES
 ## User Site
@@ -45,27 +46,18 @@ app that will feed the customers eyes what they are most interested. It recommen
   * Machine learning trained user curated product recommendations
  
  ## Admin Site
-  * Login Page
-  * Registration page with input validation
-  * Password Reset
-  * Dashboard with total revenue, total number of products, total number of orders and daily sales graph
-  * View products in the system
-  * Add new products to the system
-  * View all users in the system
-  * View all users' orders
-  * View AI models accuracies
-  * Trigger button to force train models
+ * [Admin Site](https://github.com/mmasehume/AI-Shopping-System-Admin)
  
-## HOW TO USE THE USER WEBSITE 
+# HOW TO USE THE USER WEBSITE 
 
-# Loging and registration
+## Loging and registration
 
   * First time users will have to create an account by entering their personal details, their name, surname, email, password, date of birth and location.
   * Before the user will have access to the system they will have to verify their account by clicking on a link that will be sent to their email adress.
   * Then after that they will be permitted to login.
   * After signing in the user will be redirected to the home page where they will be able to see the products that are available.
 
-# Home page
+## Home page
 
   * The user will see personalised product recommendations based on their interactions with the system
   * The user can either select the category they want to shop in under the "Category" title or scroll vertically to see the
@@ -75,7 +67,7 @@ app that will feed the customers eyes what they are most interested. It recommen
   * The user will be able to see if the items are available, low on stock and not available.
   * The user is not permitted to add items that are not available to their cart.
 
-# App bar
+## App bar
 
   * On the App bar, when the user taps on the search button they get redirected to a seach page where they can see all the products and they can enter their search text to   filter the results.
   * When the user taps on the wishlist button they get redirected to a page where they can view the items that they added to their wishlist.
@@ -89,7 +81,7 @@ app that will feed the customers eyes what they are most interested. It recommen
   * The user can navigate to their settings by clicking on the settings icon.
   * The user can sign out from the web app by clicking on the signout button.
 
-## FUTURE SCOPE
+# FUTURE SCOPE
 
   * Make the settings's page work.
   * Make the App more secure.

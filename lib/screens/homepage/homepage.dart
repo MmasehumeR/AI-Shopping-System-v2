@@ -2,15 +2,6 @@ import 'package:aishop/addons/popop_menu_consts.dart';
 import 'package:aishop/icons/icons.dart';
 import 'package:aishop/navigation/locator.dart';
 import 'package:aishop/navigation/routing/route_names.dart';
-import 'package:aishop/screens/cart/checkout_page.dart';
-import 'package:aishop/screens/cart/components/order_review.dart';
-import 'package:aishop/screens/invoices/invoices.dart';
-import 'package:aishop/screens/login/loginscreen.dart';
-import 'package:aishop/screens/past_purchases/pastpurchase.dart';
-import 'package:aishop/screens/profile_page/edit_profile.dart';
-import 'package:aishop/screens/search/search.dart';
-import 'package:aishop/screens/settings/settings.dart';
-import 'package:aishop/screens/wishlist/wislistscreen.dart';
 import 'package:aishop/services/navigation_service.dart';
 import 'package:aishop/styles/theme.dart';
 import 'package:aishop/utils/authentication.dart';
@@ -35,54 +26,44 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    updateCartTotal();
     void choiceAction(String choice) {
       if (choice == Constants.profile) {
-        locator<NavigationService>()
-                                        .globalNavigateTo(ProfileRoute, context);
-        // Navigator.push(context,
-        //     new MaterialPageRoute(builder: (context) => EditProfilePage()));
+        locator<NavigationService>().globalNavigateTo(ProfileRoute, context);
       } else if (choice == Constants.settings) {
-        locator<NavigationService>()
-                                        .globalNavigateTo(SettingsRoute, context);
-        // Navigator.push(context,
-        //     new MaterialPageRoute(builder: (context) => SettingsPage()));
+        locator<NavigationService>().globalNavigateTo(SettingsRoute, context);
       } else if (choice == Constants.orders) {
         locator<NavigationService>()
-                                        .globalNavigateTo(PastPurchasesRoute, context);
-        // Navigator.push(context,
-        //     new MaterialPageRoute(builder: (context) => PastPurchase()));
+            .globalNavigateTo(PastPurchasesRoute, context);
       } else if (choice == Constants.invoices) {
-        locator<NavigationService>()
-                                        .globalNavigateTo(InvoicesRoute, context);
-        // Navigator.push(context,
-        //     new MaterialPageRoute(builder: (context) => InvoicesPage()));
+        locator<NavigationService>().globalNavigateTo(InvoicesRoute, context);
       } else if (choice == Constants.signout) {
         signOut().then((response) => {
               if (response == "User signed out")
                 {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: new Text("Success!"),
-                        content: new Text(response),
-                        actions: <Widget>[
-                          ElevatedButton(
-                            child: new Text("OK"),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              locator<NavigationService>()
-                                        .globalNavigateTo(LoginRoute, context);
-                              // Navigator.of(context).push(MaterialPageRoute(
-                              //     builder: (BuildContext context) =>
-                              //         LoginScreen()));
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  ),
+                  locator<NavigationService>()
+                      .globalNavigateTo(LoginRoute, context),
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("You have signed out!")))
+                  // showDialog(
+                  //   context: context,
+                  //   builder: (BuildContext context) {
+                  //     return AlertDialog(
+                  //       title: new Text("Success!"),
+                  //       content: new Text(response),
+                  //       actions: <Widget>[
+                  //         ElevatedButton(
+                  //           child: new Text("OK"),
+                  //           onPressed: () {
+                  //             Navigator.of(context).pop();
+                  //             locator<NavigationService>()
+                  //                       .globalNavigateTo(LoginRoute, context);
+
+                  //           },
+                  //         ),
+                  //       ],
+                  //     );
+                  //   },
+                  // ),
                 }
               else
                 showDialog(
@@ -145,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                       setState(() {
                         this.isSearching = true;
                         locator<NavigationService>()
-                                        .globalNavigateTo(SearchRoute, context);
+                            .globalNavigateTo(SearchRoute, context);
                         // Navigator.of(context).push(MaterialPageRoute(
                         //     builder: (BuildContext context) => Search()));
                       });
@@ -168,7 +149,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   onPressed: () {
                     locator<NavigationService>()
-                                        .globalNavigateTo(WishlistRoute, context);
+                        .globalNavigateTo(WishlistRoute, context);
                     // Navigator.of(context).push(MaterialPageRoute(
                     //     builder: (BuildContext context) => WishlistPage()));
                   },
@@ -188,7 +169,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       onPressed: () {
                         locator<NavigationService>()
-                                        .globalNavigateTo(CheckOutRoute, context);
+                            .globalNavigateTo(CheckOutRoute, context);
                         // Navigator.push(
                         //     context,
                         //     new MaterialPageRoute(

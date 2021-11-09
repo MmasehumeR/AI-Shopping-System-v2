@@ -20,9 +20,7 @@ class Category extends StatelessWidget {
               Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () {
-                    locator<NavigationService>()
-                                      .globalNavigateTo(BooksRoute, context);
+                  onTap: () {locator<NavigationService>().globalNavigateTo(BooksRoute, context);
                     // Navigator.of(context).push(MaterialPageRoute(
                     //     builder: (BuildContext context) => BooksScreen()));
                   },
@@ -60,9 +58,7 @@ class Category extends StatelessWidget {
               Padding(padding: EdgeInsets.fromLTRB(10, 0, 10, 0)),
               Material(
                 child: InkWell(
-                  onTap: () {
-                    locator<NavigationService>()
-                                      .globalNavigateTo(ShoesRoute, context);
+                  onTap: () {locator<NavigationService>().globalNavigateTo(ShoesRoute, context);
                     // Navigator.of(context).push(MaterialPageRoute(
                     //     builder: (BuildContext context) => ShoesScreen()));
                   },
@@ -100,9 +96,7 @@ class Category extends StatelessWidget {
               Padding(padding: EdgeInsets.fromLTRB(10, 0, 10, 0)),
               Material(
                 child: InkWell(
-                    onTap: () {
-                      locator<NavigationService>()
-                                      .globalNavigateTo(TechRoute, context);
+                    onTap: () {locator<NavigationService>().globalNavigateTo(TechRoute, context);
                       // Navigator.of(context).push(MaterialPageRoute(
                       //     builder: (BuildContext context) => TechScreen()));
                     },

@@ -15,10 +15,7 @@ Widget Num_Of_Prod_in_Cart() {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           NumOfProd = 0;
-          for(var i = 0; i < snapshot.data!.docs.length; i++){
-            NumOfProd = NumOfProd + snapshot.data!.docs[i].get('quantity');
-          }
-          return Text(NumOfProd.toString());
+          for(var i = 0; i < snapshot.data!.docs.length; i++){ NumOfProd = NumOfProd + snapshot.data!.docs[i].get('quantity'); } return Text(NumOfProd.toString());
         } else {
           return Text(NumOfProd.toString());
         }
@@ -37,8 +34,7 @@ Widget Num_Of_Prod_in_Wishlist() {
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          NumOfProd = snapshot.data!.docs.length;
-          return Text(NumOfProd.toString());
+          NumOfProd = snapshot.data!.docs.length;return Text(NumOfProd.toString());
         } else {
           return Text(NumOfProd.toString());
         }

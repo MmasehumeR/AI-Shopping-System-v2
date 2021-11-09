@@ -54,22 +54,14 @@ class _SettingsPageState extends State<SettingsPage> {
                         CustomIconButton(icon: Icons.history, press: () => {}),
                         CustomIconButton(
                             icon: Icons.shopping_cart,
-                            press: () => {
-                                  Navigator.pop(context),
-                                  locator<NavigationService>()
-                                        .globalNavigateTo(CheckOutRoute, context)
-                                  // Navigator.push(
+                            press: () => { Navigator.pop(context), locator<NavigationService>() .globalNavigateTo(CheckOutRoute, context)           // Navigator.push(
                                   //     context,
                                   //     new MaterialPageRoute(
                                   //         builder: (context) => CheckOutPage()))
                                 }),
                         CustomIconButton(
                             icon: Icons.settings,
-                            press: () => {
-                                  Navigator.pop(context),
-                                  locator<NavigationService>()
-                                        .globalNavigateTo(SettingsRoute, context)
-                                  // Navigator.push(
+                            press: () => { Navigator.pop(context), locator<NavigationService>() .globalNavigateTo(SettingsRoute, context)         // Navigator.push(
                                   //     context,
                                   //     new MaterialPageRoute(
                                   //         builder: (context) => SettingsPage()))
@@ -192,8 +184,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               Transform.scale(
                                   scale: 0.7,
                                   child: CupertinoSwitch(
-                                    value: true,
-                                    onChanged: (bool val) {},
+                                    value: true, onChanged: (bool value) {  },
                                   ))
                             ],
                           ),

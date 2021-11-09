@@ -28,10 +28,7 @@ class MyAppBar extends AppBar {
                     size: 30,
                   ),
                 ),
-                onPressed: () {
-                  // Go to wishlist
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => WishlistPage()));
+                onPressed: () {Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WishlistPage()));
                 },
               ),
               Padding(
@@ -47,12 +44,7 @@ class MyAppBar extends AppBar {
                         size: 30,
                       ),
                     ),
-                    onPressed: () {
-                      // Go to cart
-                      Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                              builder: (context) => CheckOutPage()));
+                    onPressed: () {Navigator.push(context, new MaterialPageRoute(builder: (context) => CheckOutPage()));
                     },
                   )),
               Padding(
@@ -63,17 +55,5 @@ class MyAppBar extends AppBar {
                     AIicons.profile,
                     size: 30,
                   )),
-                  itemBuilder: (context) {
-                    contxt = context;
-                    return Constants.choices.map((String choice) {
-                      return PopupMenuItem<String>(
-                        child: Text(choice),
-                        value: choice,
-                      );
-                    }).toList();
-                  },
-                  onSelected: choiceAction,
-                ),
-              ),
-            ]);
+                  itemBuilder: (context) { contxt = context; return Constants.choices.map((String choice) { return PopupMenuItem<String>( child: Text(choice), value: choice, ); }).toList(); }, onSelected: choiceAction, ), ), ]);
 }

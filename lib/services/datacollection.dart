@@ -1,43 +1,6 @@
 import 'package:aishop/utils/authentication.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-class DataCollection{
-  final product_name, product_id, price, event, category;
-
-  DataCollection(this.product_name, this.product_id, this.price, this.event, this.category);
-
-  Future<void> DataCollector() async {
-    DateTime now = new DateTime.now();
-    DateTime date =  new DateTime(now.year, now.month, now.day, now.hour, now.minute);
-
-    var recommend_product = 'no';
-    var recommend_category = 'no';
-
-    if(event == 'view' || event == 'wishlist'){
-      recommend_product = 'yes';
-    }
-    if(event == 'view' || event == 'cart'){
-      recommend_category = 'yes';
-    }
-
-    FirebaseFirestore.instance
-        .collection('Data')
-        .doc()
-        .set({
-      'uid' : uid,
-      'date' : date,
-      'product_name' : product_name,
-      'product_id' : product_id,
-      'product_category' : category,
-      'event' : event,
-      'location' : location,
-      'province' : province,
-      'cost' : price,
-      'recommend_product' : recommend_product,
-      'recommend_category' : recommend_category
-    });
-  }
-
+class DataCollection{ final product_name, product_id, price, event, category; DataCollection(this.product_name, this.product_id, this.price, this.event, this.category); Future<void> DataCollector() async { DateTime now = new DateTime.now(); DateTime date = new DateTime(now.year, now.month, now.day, now.hour, now.minute); var recommend_product = 'no'; var recommend_category = 'no'; if(event == 'view' || event == 'wishlist'){ recommend_product = 'yes'; } if(event == 'view' || event == 'cart'){ recommend_category = 'yes'; } FirebaseFirestore.instance .collection('Data') .doc() .set({ 'uid' : uid, 'date' : date, 'product_name' : product_name, 'product_id' : product_id, 'product_category' : category, 'event' : event, 'location' : location, 'province' : province, 'cost' : price, 'recommend_product' : recommend_product, 'recommend_category' : recommend_category }); }
 //DON'T YOU DARE!!!!!!!!!!!!!!!!!! DO NOT!!!!! UNCOMMENT THIS SECTION!!!
   /*Future <void> ProductToData() async {
 

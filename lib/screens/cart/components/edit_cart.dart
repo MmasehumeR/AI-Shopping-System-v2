@@ -84,32 +84,41 @@ class _CartItem extends State<SingleCartProduct> {
                         color: white,
                         // fontFamily: "Inria Serif",
                         fontSize: 15)),
-                Container(
-                    // child: Text(
-                    //   widget.description,
-                    //   overflow: TextOverflow.fade,
-                    //   softWrap: false,
-                    //   style: TextStyle(color: lightgrey
-                    //       ,
-                    //       fontFamily: "Nunito Sans",
-                    //       fontSize: 18
-                    //   ),
-                    //   maxLines: 1,
-                    // ),
-                    ),
+                // Container(
+                //   child: Text(
+                //     widget.description,
+                //     overflow: TextOverflow.fade,
+                //     softWrap: false,
+                //     style: TextStyle(
+                //         color: lightgrey,
+                //         fontFamily: "Nunito Sans",
+                //         fontSize: 18),
+                //     maxLines: 1,
+                //   ),
+                // ),
+                // Expanded(
+                //     flex: 2,
+                //     // width: 100,
+                //     child:
                 Row(
                   children: [
-                    IconButton(
-                        onPressed: () async {
-                          if (q < 2) {
-                            delete(widget.cartid, p);
-                          } else {
-                            reduce(widget.cartid, oneItem);
-                          }
-                        },
-                        icon: Icon(Icons.remove, color: accent)),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    Expanded(
+                        flex: 1,
+                        child: IconButton(
+                            onPressed: () async {
+                              if (q < 2) {
+                                delete(widget.cartid, p);
+                              } else {
+                                reduce(widget.cartid, oneItem);
+                              }
+                            },
+                            icon: Icon(
+                              Icons.remove,
+                              color: accent,
+                            ))),
+                    Expanded(
+                        child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0.5, 0, 0),
                       child: Text(
                         q.toString(),
                         style: TextStyle(
@@ -118,16 +127,19 @@ class _CartItem extends State<SingleCartProduct> {
                             color: white.withOpacity(0.9),
                             fontWeight: FontWeight.w100),
                       ),
-                    ),
-                    IconButton(
-                        onPressed: () async {
-                          setState(() async {
-                            increase(widget.cartid, oneItem);
-                          });
-                        },
-                        icon: Icon(Icons.add, color: accent))
+                    )),
+                    Expanded(
+                        flex: 1,
+                        child: IconButton(
+                            onPressed: () async {
+                              setState(() async {
+                                increase(widget.cartid, oneItem);
+                              });
+                            },
+                            icon: Icon(Icons.add, color: accent)))
                   ],
                 )
+                // )
               ],
             ),
           ),

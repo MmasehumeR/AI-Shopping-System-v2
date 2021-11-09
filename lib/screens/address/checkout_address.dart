@@ -22,15 +22,26 @@ String otherAddress = "*";
 Future<String> getAddressses() async {
   String address = "Pro Patria, Hillbrow, GT, South Africa";
 
-  await FirebaseFirestore.instance.collection("Users").doc(uid).collection("info").doc(uid).get().then((value) async {
+  await FirebaseFirestore.instance
+      .collection("Users")
+      .doc(uid)
+      .collection("info")
+      .doc(uid)
+      .get()
+      .then((value) async {
     address = value.get('location');
 
-    if (value.data()!.containsKey("new Address")) otherAddress = value.get('new Address');
-    else otherAddress = "*";
-
+    if (value.data()!.containsKey("new Address"))
+      otherAddress = value.get('new Address');
+    else
+      otherAddress = "*";
   });
 
-  await FirebaseFirestore.instance.collection("Users").doc(uid).get().then((value) {
+  await FirebaseFirestore.instance
+      .collection("Users")
+      .doc(uid)
+      .get()
+      .then((value) {
     selectedaddress = value.get("use Address");
   });
   return address;
@@ -49,14 +60,25 @@ class _CheckOutAddress extends State<CheckOutAddress> {
   @override
   void initState() {
     getAddressses().then((value) {
-      setState(() {
-        address = value;
-        if (selectedaddress == address) { use1stAddress = true; use2ndAddress = false;}
-        else { use1stAddress = false; use2ndAddress = true;}
-        if (otherAddress != "*") anotherAddressExists = true; else anotherAddressExists = false;
-      });
+      if (this.mounted) {
+        setState(() {
+          address = value;
+          if (selectedaddress == address) {
+            use1stAddress = true;
+            use2ndAddress = false;
+          } else {
+            use1stAddress = false;
+            use2ndAddress = true;
+          }
+          if (otherAddress != "*")
+            anotherAddressExists = true;
+          else
+            anotherAddressExists = false;
+        });
+      }
 
-      userLocationController.text = address; newController.text = otherAddress;
+      userLocationController.text = address;
+      newController.text = otherAddress;
     });
 
     super.initState();
@@ -65,15 +87,26 @@ class _CheckOutAddress extends State<CheckOutAddress> {
   @override
   Widget build(BuildContext context) {
     getAddressses().then((value) {
-      setState(() {
-        address = value;
-        if (selectedaddress == address) { use1stAddress = true; use2ndAddress = false;}
-        else { use1stAddress = false; use2ndAddress = true;}
-        if (otherAddress != "*") anotherAddressExists = true; else anotherAddressExists = false;
-      });
-});
+      if (this.mounted) {
+        setState(() {
+          address = value;
+          if (selectedaddress == address) {
+            use1stAddress = true;
+            use2ndAddress = false;
+          } else {
+            use1stAddress = false;
+            use2ndAddress = true;
+          }
+          if (otherAddress != "*")
+            anotherAddressExists = true;
+          else
+            anotherAddressExists = false;
+        });
+      }
+    });
 
-    if (use1stAddress) selectedaddress = address; if (use2ndAddress) selectedaddress = otherAddress;
+    if (use1stAddress) selectedaddress = address;
+    if (use2ndAddress) selectedaddress = otherAddress;
 
     return Scaffold(
       body: ListView(children: <Widget>[
@@ -84,7 +117,8 @@ class _CheckOutAddress extends State<CheckOutAddress> {
           padding: const EdgeInsets.all(10.0),
           decoration:
               BoxDecoration(border: Border.all(color: lightblack, width: 4)),
-          child: ListView(children: <Widget>[ SizedBox( height: 10),
+          child: ListView(children: <Widget>[
+            SizedBox(height: 10),
             Text.rich(
               TextSpan(
                 style: TextStyle(
@@ -170,6 +204,9 @@ class _CheckOutAddress extends State<CheckOutAddress> {
                                     DialogButton(
                                       onPressed: () async {
                                         Navigator.of(context).pop();
+                                        // locator<NavigationService>()
+                                        //     .globalNavigateTo(
+                                        //         CheckOutDeliveryRoute, context);
 
                                         setState(() {
                                           use2ndAddress = false;
